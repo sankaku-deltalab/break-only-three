@@ -2,7 +2,9 @@ import {
   DirectorBehavior,
   DirectorGameState,
   GameInstances,
+  GameState,
   Overlaps,
+  Representation,
 } from 'curtain-call2';
 import {DefaultEnemyBeh} from './actress-behaviors/default-enemy';
 import {DefaultPCBeh} from './actress-behaviors/default-pc';
@@ -18,6 +20,10 @@ class Director implements DirectorBehavior<Stg> {
     }
   ): DirectorGameState<Stg> {
     return st;
+  }
+
+  represent(state: GameState<Stg>): Representation<Stg> {
+    return state.scene.level;
   }
 }
 

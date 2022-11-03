@@ -21,5 +21,9 @@ export type TryStgSetting = StrictAs<
     events: {
       nop: {};
     };
+    representation: {score: number};
+    notification: {
+      end: {reason: 'clear' | 'abort' | 'game-over'; score: number};
+    };
   }
 >;
