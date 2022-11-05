@@ -32,8 +32,13 @@ export type GameSliceState = {
   renderingConfig: {
     scaling: number;
   };
-  gameProgress: GameProgressState;
-  game: GameState<Stg>;
+  mode: 'menu' | 'game' | 'game-result';
+  menu: {};
+  gameResult: {};
+  game: {
+    gameProgress: GameProgressState;
+    game: GameState<Stg>;
+  };
   pointer: {
     canvasPos: Vec2d;
     down: boolean;
@@ -63,8 +68,13 @@ const initialState: GameSliceState = {
   renderingConfig: {
     scaling: 1,
   },
-  gameProgress: {mode: 'not-started'},
-  game: generateInitialGameState(),
+  mode: 'menu',
+  menu: {},
+  gameResult: {},
+  game: {
+    gameProgress: {mode: 'not-started'},
+    game: generateInitialGameState(),
+  },
   pointer: {
     canvasPos: vec2d.zero(),
     down: false,
@@ -94,30 +104,30 @@ export const gameSlice = createSlice({
     },
     startGame: (editableState, action: PayloadAction<{}>) => {
       const state = original(editableState) as GameSliceState;
-      const progress = GameProgressController.start(state.gameProgress);
-      editableState.gameProgress = progress;
+      const progress = GameProgressController.start(state.game.gameProgress);
+      editableState.game.gameProgress = progress;
     },
     pauseGame: (editableState, action: PayloadAction<{}>) => {
       const state = original(editableState) as GameSliceState;
-      const progress = GameProgressController.pause(state.gameProgress);
-      editableState.gameProgress = progress;
+      const progress = GameProgressController.pause(state.game.gameProgress);
+      editableState.game.gameProgress = progress;
     },
     unpauseGame: (editableState, action: PayloadAction<{}>) => {
       const state = original(editableState) as GameSliceState;
-      const progress = GameProgressController.unpause(state.gameProgress);
-      editableState.gameProgress = progress;
+      const progress = GameProgressController.unpause(state.game.gameProgress);
+      editableState.game.gameProgress = progress;
     },
     finishGame: (editableState, action: PayloadAction<{}>) => {
       const state = original(editableState) as GameSliceState;
-      const progress = GameProgressController.finish(state.gameProgress);
-      editableState.gameProgress = progress;
+      const progress = GameProgressController.finish(state.game.gameProgress);
+      editableState.game.gameProgress = progress;
     },
     updateGame: (editableState, action: PayloadAction<{deltaMs: number}>) => {
       const state = original(editableState) as GameSliceState;
       const renderingState = calcRenderingState(state);
       const {state: newGameState, notifications} =
-        GameProgressController.updateGame(state.game, {
-          progress: state.gameProgress,
+        GameProgressController.updateGame(state.game.game, {
+          progress: state.game.gameProgress,
           input: {
             pointer: state.pointer,
           },
@@ -127,17 +137,19 @@ export const gameSlice = createSlice({
           renderingState,
           instances: tryStgInstances,
         });
-      editableState.game = newGameState;
+      editableState.game.game = newGameState;
 
       for (const notify of notifications) {
         if (notify.type === 'end') {
-          const progress = GameProgressController.finish(state.gameProgress);
-          editableState.gameProgress = progress;
+          const progress = GameProgressController.finish(
+            state.game.gameProgress
+          );
+          editableState.game.gameProgress = progress;
         }
       }
     },
     resetAllStageState: (state, action: PayloadAction<GameState<Stg>>) => {
-      state.game = action.payload;
+      state.game.game = action.payload;
     },
   },
 });
@@ -169,7 +181,7 @@ export const selectGraphics = createSelector<
   [typeof selectGameState],
   CanvasGraphic<Stg>[]
 >([selectGameState], state => {
-  return GameRepresentation.generateGraphics(state.game, {
+  return GameRepresentation.generateGraphics(state.game.game, {
     renderingState: calcRenderingState(state),
     instances: tryStgInstances,
   });
@@ -186,7 +198,7 @@ export const selectRenderingArea = createSelector<
   [typeof selectGameState],
   AaRect2d
 >([selectGameState], state => {
-  return GameRepresentation.getRenderingArea(state.game, {
+  return GameRepresentation.getRenderingArea(state.game.game, {
     renSt: calcRenderingState(state),
   });
 });
