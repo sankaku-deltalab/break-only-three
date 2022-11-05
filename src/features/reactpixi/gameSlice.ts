@@ -102,10 +102,15 @@ export const gameSlice = createSlice({
       state.pointer.canvasPos = action.payload.pos;
       state.pointer.down = false;
     },
-    startGame: (editableState, action: PayloadAction<{}>) => {
-      const state = original(editableState) as GameSliceState;
-      const progress = GameProgressController.start(state.game.gameProgress);
-      editableState.game.gameProgress = progress;
+    startGameFromMenu: (editableState, action: PayloadAction<{}>) => {
+      if (editableState.mode !== 'menu') {
+        return;
+      }
+      editableState.mode = 'game';
+      editableState.game = {
+        gameProgress: {mode: 'active'},
+        game: generateInitialGameState(),
+      };
     },
     pauseGame: (editableState, action: PayloadAction<{}>) => {
       const state = original(editableState) as GameSliceState;
@@ -123,6 +128,9 @@ export const gameSlice = createSlice({
       editableState.game.gameProgress = progress;
     },
     updateGame: (editableState, action: PayloadAction<{deltaMs: number}>) => {
+      if (editableState.mode !== 'game') {
+        return;
+      }
       const state = original(editableState) as GameSliceState;
       const renderingState = calcRenderingState(state);
       const {state: newGameState, notifications} =
@@ -161,6 +169,7 @@ export const {
   downPointer,
   updateGame,
   resetAllStageState,
+  startGameFromMenu,
 } = gameSlice.actions;
 
 const calcRenderingState = (state: GameSliceState): RenderingState => {
@@ -201,6 +210,13 @@ export const selectRenderingArea = createSelector<
   return GameRepresentation.getRenderingArea(state.game.game, {
     renSt: calcRenderingState(state),
   });
+});
+
+export const selectMode = createSelector<
+  [typeof selectGameState],
+  'menu' | 'game' | 'game-result'
+>([selectGameState], state => {
+  return state.mode;
 });
 
 export default gameSlice.reducer;

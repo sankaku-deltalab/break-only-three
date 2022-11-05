@@ -13,7 +13,6 @@ import {
   selectRenderingArea,
 } from './gameSlice';
 import {
-  AaRect2d,
   AaRect2dTrait,
   CanvasLineGraphic,
   CanvasSpriteGraphic,
