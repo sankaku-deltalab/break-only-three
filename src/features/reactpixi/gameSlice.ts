@@ -163,12 +163,11 @@ export const gameSlice = createSlice({
           const progress = GameProgressController.finish(
             state.game.gameProgress
           );
-          const no = notify as Notification<Stg, 'end'>;
           editableState.game.gameProgress = progress;
           editableState.mode = 'game-result';
           editableState.gameResult = {
-            endReason: no.payload.reason,
-            score: no.payload.score,
+            endReason: notify.payload.reason,
+            score: notify.payload.score,
           };
         }
       }
