@@ -11,6 +11,7 @@ import {
   selectMode,
   selectResult,
   returnToMenuFromResult,
+  selectRepresentation,
 } from '../features/reactpixi/gameSlice';
 import {RecSetTrait} from 'curtain-call2';
 
@@ -57,7 +58,9 @@ const Menu = () => {
 
 const Game = () => {
   const [winWidth, winHeight] = useWindowSize();
+
   const mode = useAppSelector(selectMode);
+  const representation = useAppSelector(selectRepresentation);
 
   const visible = mode in RecSetTrait.new(['game', 'game-result']);
   const visibility = visible ? 'visible' : 'hidden';
@@ -65,9 +68,31 @@ const Game = () => {
 
   const [width, height] = [winWidth * scale, winHeight * scale];
 
+  const uiVisible = mode in RecSetTrait.new(['game']);
+
   return (
     <div style={{visibility, position: 'absolute'}}>
       <StageForNextjs canvasSize={{x: width, y: height}} />
+      {uiVisible ? (
+        <div
+          style={{
+            position: 'absolute',
+            width: '100vw',
+            height: '100vh',
+            pointerEvents: 'none',
+          }}
+        >
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.5)',
+            }}
+          >
+            {`score: ${representation.score}`}
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
@@ -89,7 +114,8 @@ const GameResult = () => {
         position: 'fixed',
         width: '100vw',
         height: '100vh',
-        background: 'rgba(0, 0, 0, 0.5)',
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: 'rgb(255, 255, 255)',
       }}
     >
       <div>Result</div>

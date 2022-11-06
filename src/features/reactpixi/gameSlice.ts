@@ -16,6 +16,7 @@ import {
   Notification,
   NotificationPayload,
   RenderingState,
+  Representation,
   Vec2d,
   Vec2dTrait,
 } from 'curtain-call2';
@@ -227,6 +228,15 @@ export const selectRenderingArea = createSelector<
 >([selectGameState], state => {
   return GameRepresentation.getRenderingArea(state.game.game, {
     renSt: calcRenderingState(state),
+  });
+});
+
+export const selectRepresentation = createSelector<
+  [typeof selectGameState],
+  Representation<Stg>
+>([selectGameState], state => {
+  return GameRepresentation.getRepresentation(state.game.game, {
+    instances: tryStgInstances,
   });
 });
 
