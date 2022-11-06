@@ -2,10 +2,12 @@ import {Setting, Vec2d} from 'curtain-call2';
 
 type StrictAs<Base, T extends Base> = T;
 
+export type GameEndReason = 'clear' | 'abort' | 'game-over';
+
 export type TryStgSetting = StrictAs<
   Setting,
   {
-    level: {score: number};
+    level: {score: number; ended: boolean};
     bodies: {
       pc: {pos: Vec2d; health: number};
       enemy: {pos: Vec2d; health: number};
@@ -21,9 +23,9 @@ export type TryStgSetting = StrictAs<
     events: {
       nop: {};
     };
-    representation: {score: number};
+    representation: {score: number; ended: boolean};
     notification: {
-      end: {reason: 'clear' | 'abort' | 'game-over'; score: number};
+      end: {reason: GameEndReason; score: number};
     };
   }
 >;

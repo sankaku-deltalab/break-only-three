@@ -6,7 +6,13 @@ import {useWindowSize} from '@react-hook/window-size';
 import styles from '../styles/Home.module.css';
 import {useAppSelector, useAppDispatch} from '../hooks';
 
-import {startGameFromMenu, selectMode} from '../features/reactpixi/gameSlice';
+import {
+  startGameFromMenu,
+  selectMode,
+  selectResult,
+  returnToMenuFromResult,
+} from '../features/reactpixi/gameSlice';
+import {RecSetTrait} from 'curtain-call2';
 
 const StageForNextjs = dynamic(
   () => import('../features/reactpixi/stage-for-nextjs'),
@@ -24,6 +30,7 @@ const IndexPage: NextPage = () => {
       </Head>
       <Menu />
       <Game />
+      <GameResult />
     </div>
   );
 };
@@ -52,7 +59,8 @@ const Game = () => {
   const [winWidth, winHeight] = useWindowSize();
   const mode = useAppSelector(selectMode);
 
-  const visible = mode === 'game';
+  const visible = mode in RecSetTrait.new(['game', 'game-result']);
+  console.log(mode, visible);
   const visibility = visible ? 'visible' : 'hidden';
   const scale = visible ? 1.0 : 0.0;
 
@@ -61,6 +69,36 @@ const Game = () => {
   return (
     <div style={{visibility, position: 'absolute'}}>
       <StageForNextjs canvasSize={{x: width, y: height}} />
+    </div>
+  );
+};
+
+const GameResult = () => {
+  const dispatch = useAppDispatch();
+  const mode = useAppSelector(selectMode);
+  const result = useAppSelector(selectResult);
+
+  const visible = mode === 'game-result';
+
+  if (!visible) {
+    return <></>;
+  }
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        width: '100vw',
+        height: '100vh',
+        background: 'rgba(0, 0, 0, 0.5)',
+      }}
+    >
+      <div>Result</div>
+      <div>{result.endReason}</div>
+      <div>score: {result.score}</div>
+      <button onClick={() => dispatch(returnToMenuFromResult({}))}>
+        Return to menu
+      </button>
     </div>
   );
 };

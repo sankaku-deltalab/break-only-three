@@ -52,8 +52,9 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
   };
 
   const Updater = () => {
+    const fpms = PIXI.settings.TARGET_FPMS ?? 1 / 60;
     useTick(frames => {
-      const deltaMs = frames / (1 / 60); // 1/60 = PIXI.settings.TARGET_FPMS
+      const deltaMs = frames / fpms; // 1/60 = PIXI.settings.TARGET_FPMS
       dispatch(updateGame({deltaMs}));
     });
     return <Container />;
@@ -75,7 +76,7 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
       <Stage
         width={canvasSize.x}
         height={canvasSize.y}
-        style={{position: 'absolute'}}
+        style={{position: 'fixed', top: 0, left: 0}}
       >
         <Updater />
         <Graphics

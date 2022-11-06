@@ -13,17 +13,21 @@ import {
   GameProgressState,
   GameRepresentation,
   GameState,
+  Notification,
+  NotificationPayload,
   RenderingState,
   Vec2d,
   Vec2dTrait,
 } from 'curtain-call2';
 import {gameArea} from './game/constants';
-import {TryStgSetting} from './game/setting';
+import {GameEndReason, TryStgSetting} from './game/setting';
 import {tryStgInstances} from './game/instances';
 
 type Stg = TryStgSetting;
 
 const vec2d = Vec2dTrait;
+
+type Result = {endReason: GameEndReason; score: number};
 
 export type GameSliceState = {
   canvas: {
@@ -34,7 +38,7 @@ export type GameSliceState = {
   };
   mode: 'menu' | 'game' | 'game-result';
   menu: {};
-  gameResult: {};
+  gameResult: Result;
   game: {
     gameProgress: GameProgressState;
     game: GameState<Stg>;
@@ -54,7 +58,7 @@ const generateInitialGameState = (): GameState<Stg> => {
   };
 
   return pipe(
-    () => ({level: {score: 0}, camera: {size: gameArea}}),
+    () => ({level: {score: 0, ended: false}, camera: {size: gameArea}}),
     args => GameProcessing.init<Stg>(args),
     st => GameHelper.addActress(st, pc),
     args => args.state
@@ -70,7 +74,7 @@ const initialState: GameSliceState = {
   },
   mode: 'menu',
   menu: {},
-  gameResult: {},
+  gameResult: {endReason: 'abort', score: 0},
   game: {
     gameProgress: {mode: 'not-started'},
     game: generateInitialGameState(),
@@ -112,6 +116,12 @@ export const gameSlice = createSlice({
         game: generateInitialGameState(),
       };
     },
+    returnToMenuFromResult: (editableState, action: PayloadAction<{}>) => {
+      if (editableState.mode !== 'game-result') {
+        return;
+      }
+      editableState.mode = 'menu';
+    },
     pauseGame: (editableState, action: PayloadAction<{}>) => {
       const state = original(editableState) as GameSliceState;
       const progress = GameProgressController.pause(state.game.gameProgress);
@@ -133,6 +143,7 @@ export const gameSlice = createSlice({
       }
       const state = original(editableState) as GameSliceState;
       const renderingState = calcRenderingState(state);
+      let st = state.game.game;
       const {state: newGameState, notifications} =
         GameProgressController.updateGame(state.game.game, {
           progress: state.game.gameProgress,
@@ -145,16 +156,23 @@ export const gameSlice = createSlice({
           renderingState,
           instances: tryStgInstances,
         });
-      editableState.game.game = newGameState;
+      st = newGameState;
 
       for (const notify of notifications) {
         if (notify.type === 'end') {
           const progress = GameProgressController.finish(
             state.game.gameProgress
           );
+          const no = notify as Notification<Stg, 'end'>;
           editableState.game.gameProgress = progress;
+          editableState.mode = 'game-result';
+          editableState.gameResult = {
+            endReason: no.payload.reason,
+            score: no.payload.score,
+          };
         }
       }
+      editableState.game.game = st;
     },
     resetAllStageState: (state, action: PayloadAction<GameState<Stg>>) => {
       state.game.game = action.payload;
@@ -170,6 +188,7 @@ export const {
   updateGame,
   resetAllStageState,
   startGameFromMenu,
+  returnToMenuFromResult,
 } = gameSlice.actions;
 
 const calcRenderingState = (state: GameSliceState): RenderingState => {
@@ -218,5 +237,12 @@ export const selectMode = createSelector<
 >([selectGameState], state => {
   return state.mode;
 });
+
+export const selectResult = createSelector<[typeof selectGameState], Result>(
+  [selectGameState],
+  state => {
+    return state.gameResult;
+  }
+);
 
 export default gameSlice.reducer;
