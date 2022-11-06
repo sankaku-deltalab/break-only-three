@@ -60,7 +60,6 @@ const Game = () => {
   const mode = useAppSelector(selectMode);
 
   const visible = mode in RecSetTrait.new(['game', 'game-result']);
-  console.log(mode, visible);
   const visibility = visible ? 'visible' : 'hidden';
   const scale = visible ? 1.0 : 0.0;
 
