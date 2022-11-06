@@ -24,7 +24,7 @@ export type TryStgSetting = StrictAs<
       nop: {};
     };
     representation: {score: number; ended: boolean};
-    notification: {
+    notifications: {
       end: {reason: GameEndReason; score: number};
     };
   }
