@@ -58,6 +58,7 @@ export class DefaultPCBeh implements ActressBehavior<Stg, BT, MT> {
       ],
       thickness: 10,
       closed: true,
+      zIndex: 0,
     });
     return [line];
   }

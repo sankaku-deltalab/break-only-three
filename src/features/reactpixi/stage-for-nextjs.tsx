@@ -81,6 +81,7 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
         <Updater />
         <Graphics
           ref={maskRef}
+          zIndex={-1}
           draw={g => {
             g.clear();
             g.beginFill(0xffffff);
@@ -89,6 +90,7 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
           }}
         />
         <Graphics
+          zIndex={-1}
           draw={g => {
             g.clear();
             g.beginFill(0xaaaaaa);
@@ -131,13 +133,21 @@ const LineGraphicElement = (props: {line: CanvasLineGraphic}) => {
     [props]
   );
 
-  return <Graphics key={props.line.key} draw={draw} />;
+  return (
+    <Graphics key={props.line.key} zIndex={props.line.zIndex} draw={draw} />
+  );
 };
 
 const SpriteGraphicElement = (props: {sprite: CanvasSpriteGraphic}) => {
   const g = props.sprite;
   return (
-    <Sprite key={g.key} anchor={[0.5, 0.5]} image={g.imgKey} position={g.pos} />
+    <Sprite
+      key={g.key}
+      anchor={[0.5, 0.5]}
+      zIndex={g.zIndex}
+      image={g.imgKey}
+      position={g.pos}
+    />
   );
 };
 
