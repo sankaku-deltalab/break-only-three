@@ -116,6 +116,10 @@ export const gameSlice = createSlice({
         gameProgress: {mode: 'active'},
         game: generateInitialGameState(),
       };
+      editableState.pointer = {
+        canvasPos: vec2d.zero(),
+        down: false,
+      };
     },
     returnToMenuFromResult: (editableState, action: PayloadAction<{}>) => {
       if (editableState.mode !== 'game-result') {
