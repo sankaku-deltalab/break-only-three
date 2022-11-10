@@ -49,7 +49,10 @@ const Menu = () => {
   return (
     <div>
       <div>Try STG</div>
-      <button onClick={() => dispatch(startGameFromMenu({}))}>
+      <button
+        onKeyDown={() => {}}
+        onClick={() => dispatch(startGameFromMenu({}))}
+      >
         Start game
       </button>
     </div>
@@ -121,7 +124,10 @@ const GameResult = () => {
       <div>Result</div>
       <div>{result.endReason}</div>
       <div>score: {result.score}</div>
-      <button onClick={() => dispatch(returnToMenuFromResult({}))}>
+      <button
+        onKeyDown={() => {}}
+        onClick={() => dispatch(returnToMenuFromResult({}))}
+      >
         Return to menu
       </button>
     </div>
