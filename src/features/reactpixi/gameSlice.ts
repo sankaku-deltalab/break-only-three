@@ -60,7 +60,7 @@ const generateInitialGameState = (): GameState<Stg> => {
 
   return pipe(
     () => ({level: {score: 0, ended: false}, camera: {size: gameArea}}),
-    args => GameProcessing.init<Stg>(args),
+    args => GameProcessing.createInitialState<Stg>(args),
     st => GameHelper.addActress(st, pc),
     args => args.state
   )();
