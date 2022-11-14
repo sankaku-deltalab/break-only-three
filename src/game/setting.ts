@@ -1,4 +1,5 @@
 import {Setting, Vec2d} from 'curtain-call2';
+import {Health} from './components/health';
 
 type StrictAs<Base, T extends Base> = T;
 
@@ -9,8 +10,8 @@ export type TryStgSetting = StrictAs<
   {
     level: {score: number; ended: boolean};
     bodies: {
-      pc: {pos: Vec2d; health: number};
-      enemy: {pos: Vec2d; health: number};
+      pc: {pos: Vec2d; health: Health};
+      enemy: {pos: Vec2d; health: Health};
       // pcBullet: {pos: Vec2d; velocity: Vec2d};
       // enemyBullet: {pos: Vec2d; velocity: Vec2d};
     };
