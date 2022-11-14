@@ -20,9 +20,9 @@ import {
   Vec2d,
   Vec2dTrait,
 } from 'curtain-call2';
-import {gameArea} from './game/constants';
-import {GameEndReason, TryStgSetting} from './game/setting';
-import {tryStgInstances} from './game/instances';
+import {gameArea} from '../../game/constants';
+import {GameEndReason, TryStgSetting} from '../../game/setting';
+import {tryStgInstances} from '../../game/instances';
 
 type Stg = TryStgSetting;
 
