@@ -4,6 +4,7 @@ import {
   ActressState,
   Collision,
   Graphic,
+  Im,
   InputHelper,
   LineGraphicTrait,
   Vec2dTrait,
@@ -11,6 +12,7 @@ import {
 } from 'curtain-call2';
 import {unit} from '../constants';
 import {TryStgSetting} from '../setting';
+import {PosTrait} from '../components/pos';
 
 type Stg = TryStgSetting;
 type BT = 'pc';
@@ -36,9 +38,8 @@ export class DefaultPCBeh implements ActressBehavior<Stg, BT, MT> {
     }
   ): ActressState<Stg, BT, MT> {
     const delta = InputHelper.deltaWhileDown(args.gameState);
-    return product(st, st => {
-      st.body.pos = Vec2dTrait.add(st.body.pos, delta);
-    });
+    const body = Im.replace(st.body, 'pos', p => PosTrait.move(p, delta));
+    return Im.replace(st, 'body', () => body);
   }
 
   generateGraphics(
@@ -49,7 +50,7 @@ export class DefaultPCBeh implements ActressBehavior<Stg, BT, MT> {
   ): Graphic<Stg>[] {
     const line = LineGraphicTrait.create({
       key: 'main',
-      pos: st.body.pos,
+      pos: st.body.pos.pos,
       color: 0xff0000,
       paths: [
         {x: 0, y: unit / 2},

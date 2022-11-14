@@ -23,6 +23,8 @@ import {
 import {gameArea} from '../../game/constants';
 import {GameEndReason, TryStgSetting} from '../../game/setting';
 import {tryStgInstances} from '../../game/instances';
+import {PosTrait} from '../../game/components/pos';
+import {HealthTrait} from '../../game/components/health';
 
 type Stg = TryStgSetting;
 
@@ -54,7 +56,10 @@ const generateInitialGameState = (): GameState<Stg> => {
   const pc: ActressInitializer<Stg, 'pc', 'defaultPc'> = {
     bodyType: 'pc',
     mindType: 'defaultPc',
-    body: {pos: Vec2dTrait.zero(), health: 0},
+    body: {
+      pos: PosTrait.create({pos: Vec2dTrait.zero()}),
+      health: HealthTrait.create(150),
+    },
     mind: {a: 0},
   };
 
