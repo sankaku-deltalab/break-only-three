@@ -13,10 +13,14 @@ import {
   selectRenderingArea,
 } from './gameSlice';
 import {
+  AaRect2d,
   AaRect2dTrait,
   CanvasLineGraphic,
   CanvasSpriteGraphic,
   GraphicHelper,
+  Res,
+  Result,
+  Vec2d,
   Vec2dTrait,
 } from 'curtain-call2';
 
@@ -32,6 +36,7 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
   const storedCanvasSize = useAppSelector(selectCanvasSize);
   const renderingArea = useAppSelector(selectRenderingArea);
   const maskRef = useRef(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!vec2d.eq(canvasSize, storedCanvasSize)) {
@@ -39,12 +44,31 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
     }
   }, [canvasSize, storedCanvasSize]);
 
+  const getCanvasPos = (clientPos: Vec2d): Result<Vec2d> => {
+    if (canvasRef.current === null) return Res.err('canvas not found');
+    const canvasNwPos = {
+      x: canvasRef.current.offsetLeft,
+      y: canvasRef.current.offsetTop,
+    };
+    return Res.ok(Vec2dTrait.sub(clientPos, canvasNwPos));
+  };
+
   const handlePointerDown = (e: PointerEvent<HTMLElement>) => {
-    dispatch(downPointer({pos: {x: e.screenX, y: e.screenY}}));
+    const pos = getCanvasPos({
+      x: e.clientX,
+      y: e.clientY,
+    });
+    if (pos.err) return;
+    dispatch(downPointer({pos: pos.val}));
   };
 
   const handlePointerUp = (e: PointerEvent<HTMLElement>) => {
-    dispatch(upPointer({pos: {x: e.screenX, y: e.screenY}}));
+    const pos = getCanvasPos({
+      x: e.clientX,
+      y: e.clientY,
+    });
+    if (pos.err) return;
+    dispatch(upPointer({pos: pos.val}));
   };
 
   const handlePointerMove = (e: PointerEvent<HTMLElement>) => {
@@ -68,10 +92,11 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
 
   return (
     <div
-      style={{width: 0, height: 0}}
+      style={{width: 2, height: 2, position: 'absolute', top: 0, left: 0}}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerMove={handlePointerMove}
+      ref={canvasRef}
     >
       <Stage
         width={canvasSize.x}
@@ -98,7 +123,7 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
             g.endFill();
           }}
         />
-        {/* <CameraGraphicElement area={renderingArea} /> */}
+        <CameraGraphicElement area={renderingArea} />
         <Container mask={maskRef.current} position={[0, 0]}>
           {lineGraphics.map(line => (
             <LineGraphicElement key={line.key} line={line} />
@@ -151,23 +176,23 @@ const SpriteGraphicElement = (props: {sprite: CanvasSpriteGraphic}) => {
   );
 };
 
-// const CameraGraphicElement = (props: {area: AaRect2d}) => {
-//   const area = props.area;
-//   const draw = useCallback(
-//     (g: PIXI.Graphics) => {
-//       g.clear();
-//       g.lineStyle(5, 0xff00ff);
+const CameraGraphicElement = (props: {area: AaRect2d}) => {
+  const area = props.area;
+  const draw = useCallback(
+    (g: PIXI.Graphics) => {
+      g.clear();
+      g.lineStyle(2, 0xff00ff);
 
-//       g.moveTo(area.nw.x, area.nw.y);
-//       g.lineTo(area.se.x, area.se.y);
+      g.moveTo(area.nw.x, area.nw.y);
+      g.lineTo(area.se.x, area.se.y);
 
-//       g.moveTo(area.nw.x, area.se.y);
-//       g.lineTo(area.se.x, area.nw.y);
-//     },
-//     [area]
-//   );
+      g.moveTo(area.nw.x, area.se.y);
+      g.lineTo(area.se.x, area.nw.y);
+    },
+    [area]
+  );
 
-//   return <Graphics draw={draw} />;
-// };
+  return <Graphics draw={draw} />;
+};
 
 export default StageForNextjs;

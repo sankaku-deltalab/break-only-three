@@ -7,12 +7,14 @@ import {
   AaRect2d,
   ActressInitializer,
   CanvasGraphic,
+  Enum,
   GameHelper,
   GameProcessing,
   GameProgressController,
   GameProgressState,
   GameRepresentation,
   GameState,
+  Im,
   Notification,
   NotificationPayload,
   RenderingState,
@@ -20,11 +22,12 @@ import {
   Vec2d,
   Vec2dTrait,
 } from 'curtain-call2';
-import {gameArea} from '../../game/constants';
+import {gameArea, unit} from '../../game/constants';
 import {GameEndReason, TryStgSetting} from '../../game/setting';
 import {tryStgInstances} from '../../game/instances';
 import {PosTrait} from '../../game/components/pos';
 import {HealthTrait} from '../../game/components/health';
+import {BallMovementTrait} from '../../game/components/ball-movement';
 
 type Stg = TryStgSetting;
 
@@ -63,11 +66,50 @@ const generateInitialGameState = (): GameState<Stg> => {
     mind: {a: 0},
   };
 
+  const paddle: ActressInitializer<Stg, 'paddle', 'defaultPaddle'> = {
+    bodyType: 'paddle',
+    mindType: 'defaultPaddle',
+    body: {
+      pos: PosTrait.create({pos: {x: 0, y: unit}}),
+      status: {size: {x: unit, y: unit / 2}},
+    },
+    mind: {},
+  };
+
+  const ball: ActressInitializer<Stg, 'ball', 'defaultBall'> = {
+    bodyType: 'ball',
+    mindType: 'defaultBall',
+    body: {
+      pos: PosTrait.create({pos: Vec2dTrait.zero()}),
+      diam: unit / 8,
+      movement: BallMovementTrait.create(),
+    },
+    mind: {},
+  };
+
+  const blocks = pipe(
+    () => Im.range(0, 3),
+    r =>
+      Enum.map(
+        r,
+        (i): ActressInitializer<Stg, 'block', 'defaultBlock'> => ({
+          bodyType: 'block',
+          mindType: 'defaultBlock',
+          body: {
+            pos: PosTrait.create({pos: {x: (i * 5 * unit) / 6, y: -unit}}),
+            size: {x: unit / 2, y: unit / 4},
+          },
+          mind: {},
+        })
+      ),
+    v => v
+  )();
+  const acts = [paddle, ball, ...blocks];
+
   return pipe(
     () => ({level: {score: 0, ended: false}, camera: {size: gameArea}}),
     args => GameProcessing.createInitialState<Stg>(args),
-    st => GameHelper.addActress(st, pc),
-    args => args.state
+    st => GameHelper.addActresses(st, acts).state
   )();
 };
 
