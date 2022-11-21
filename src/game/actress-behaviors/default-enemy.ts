@@ -4,7 +4,7 @@ import {
   Collision,
   Graphic,
   VisibleGameState,
-} from 'curtain-call2';
+} from 'curtain-call3';
 import {TryStgSetting} from '../setting';
 
 type Stg = TryStgSetting;

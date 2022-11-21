@@ -1,4 +1,4 @@
-import {GameInstances} from 'curtain-call2';
+import {GameInstances} from 'curtain-call3';
 import {DefaultBallBeh} from './actress-behaviors/default-ball';
 import {DefaultBlockBeh} from './actress-behaviors/default-block';
 import {DefaultEnemyBeh} from './actress-behaviors/default-enemy';

@@ -21,7 +21,7 @@ import {
   Representation,
   Vec2d,
   Vec2dTrait,
-} from 'curtain-call2';
+} from 'curtain-call3';
 import {gameArea, unit} from '../../game/constants';
 import {GameEndReason, TryStgSetting} from '../../game/setting';
 import {tryStgInstances} from '../../game/instances';

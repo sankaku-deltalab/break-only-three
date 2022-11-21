@@ -1,4 +1,4 @@
-import {AaRect2d, AaRect2dTrait, Im, Vec2d, Vec2dTrait} from 'curtain-call2';
+import {AaRect2d, AaRect2dTrait, Im, Vec2d, Vec2dTrait} from 'curtain-call3';
 import {unit} from '../constants';
 
 export type BallMovement = {

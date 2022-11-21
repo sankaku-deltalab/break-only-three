@@ -11,7 +11,7 @@ import {
   Representation,
   Res,
   Result,
-} from 'curtain-call2';
+} from 'curtain-call3';
 import {pipe} from 'rambda';
 import {BallMovementTrait} from './components/ball-movement';
 import {gameAreaSE} from './constants';

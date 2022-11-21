@@ -12,7 +12,7 @@ import {
   VisibleGameState,
   CollisionHelper,
   TimeTrait,
-} from 'curtain-call2';
+} from 'curtain-call3';
 import {gameArea, gameAreaRect, unit} from '../constants';
 import {collisionModes, TryStgSetting} from '../setting';
 import {PosTrait} from '../components/pos';

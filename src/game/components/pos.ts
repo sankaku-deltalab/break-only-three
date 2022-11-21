@@ -1,4 +1,4 @@
-import {Im, Vec2d, Vec2dTrait} from 'curtain-call2';
+import {Im, Vec2d, Vec2dTrait} from 'curtain-call3';
 
 export type Pos = {
   pos: Vec2d;

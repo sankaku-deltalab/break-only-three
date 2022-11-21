@@ -1,4 +1,4 @@
-import {AaRect2d, Vec2d, Vec2dTrait} from 'curtain-call2';
+import {AaRect2d, Vec2d, Vec2dTrait} from 'curtain-call3';
 
 export const unit = 50;
 export const gameArea: Vec2d = {x: unit * 6, y: unit * 8};

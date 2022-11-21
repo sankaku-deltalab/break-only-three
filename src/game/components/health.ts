@@ -1,4 +1,4 @@
-import {Im} from 'curtain-call2';
+import {Im} from 'curtain-call3';
 
 export type Health = {
   current: number;

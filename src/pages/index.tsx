@@ -13,7 +13,7 @@ import {
   returnToMenuFromResult,
   selectRepresentation,
 } from '../features/reactpixi/gameSlice';
-import {RecSetTrait} from 'curtain-call2';
+import {RecSetTrait} from 'curtain-call3';
 
 const StageForNextjs = dynamic(
   () => import('../features/reactpixi/stage-for-nextjs'),

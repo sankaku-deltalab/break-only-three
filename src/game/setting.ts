@@ -1,4 +1,4 @@
-import {AaRect2d, Setting, Vec2d} from 'curtain-call2';
+import {AaRect2d, Setting, Vec2d} from 'curtain-call3';
 import {BallMovement} from './components/ball-movement';
 import {Health} from './components/health';
 import {PaddleStatus} from './components/paddle-status';

@@ -22,7 +22,7 @@ import {
   Result,
   Vec2d,
   Vec2dTrait,
-} from 'curtain-call2';
+} from 'curtain-call3';
 
 const vec2d = Vec2dTrait;
 
