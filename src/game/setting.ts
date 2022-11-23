@@ -33,7 +33,7 @@ export type TryStgSetting = StrictAs<
       // defaultEnemyBullet: {};
     };
     events: {
-      // nop: {};
+      nop: {};
     };
     representation: {score: number; ended: boolean};
     notifications: {

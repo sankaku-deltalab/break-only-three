@@ -6,6 +6,7 @@ import {DefaultPaddleBeh} from './actress-behaviors/default-paddle';
 import {DefaultPCBeh} from './actress-behaviors/default-pc';
 import {DefaultWallBeh} from './actress-behaviors/default-wall';
 import {Director} from './director';
+import {NopEv} from './event-appliers/nop-ev';
 import {TryStgSetting} from './setting';
 
 type Stg = TryStgSetting;
@@ -20,5 +21,7 @@ export const tryStgInstances: GameInstances<TryStgSetting> = {
     defaultBall: new DefaultBallBeh(),
     defaultBlock: new DefaultBlockBeh(),
   },
-  eventAppliers: {},
+  eventAppliers: {
+    nop: new NopEv(),
+  },
 };
