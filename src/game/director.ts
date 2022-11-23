@@ -1,5 +1,6 @@
 import {
   AaRect2dTrait,
+  AnyEvent,
   BodyId,
   DirectorBehavior,
   Enum,
@@ -37,6 +38,15 @@ export class Director implements DirectorBehavior<Stg> {
     )();
     if (st.err) throw Error(String(st.val));
     return st.val;
+  }
+
+  generateEvents(
+    st: GameState<Stg>,
+    other: {
+      overlaps: Overlaps;
+    }
+  ): AnyEvent<Stg>[] {
+    return [];
   }
 
   represent(state: GameState<Stg>): Representation<Stg> {

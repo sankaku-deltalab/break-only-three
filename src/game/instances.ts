@@ -20,4 +20,5 @@ export const tryStgInstances: GameInstances<TryStgSetting> = {
     defaultBall: new DefaultBallBeh(),
     defaultBlock: new DefaultBlockBeh(),
   },
+  eventAppliers: {},
 };
