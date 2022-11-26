@@ -1,4 +1,4 @@
-import {AaRect2d, Setting, Vec2d} from 'curtain-call3';
+import {AaRect2d, BodyId, Setting, Vec2d} from 'curtain-call3';
 import {BallMovement} from './components/ball-movement';
 import {Health} from './components/health';
 import {PaddleStatus} from './components/paddle-status';
@@ -34,6 +34,9 @@ export type TryStgSetting = StrictAs<
     };
     events: {
       nop: {};
+      ballHitToPaddle: {ballId: BodyId; paddleId: BodyId};
+      ballHitToBlock: {ballId: BodyId; blockId: BodyId};
+      allBlocksAreBroken: {};
     };
     representation: {score: number; ended: boolean};
     notifications: {
