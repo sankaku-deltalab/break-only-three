@@ -35,13 +35,17 @@ export class BallMovementTrait {
 
     if (Vec2dTrait.isZero(position)) return ball;
 
-    const normal = Vec2dTrait.uniformed(Vec2dTrait.mlt(position, -1));
+    const normal = Vec2dTrait.uniformed(position);
+    return this.reflectByNormal(ball, {normal});
+  }
 
-    if (Vec2dTrait.dot(normal, ball.velocity) <= 0) return ball;
+  static reflectByNormal(
+    ball: BallMovement,
+    args: {normal: Vec2d}
+  ): BallMovement {
+    if (Vec2dTrait.dot(args.normal, ball.velocity) >= 0) return ball;
 
-    const newVelocity = Vec2dTrait.reflect(ball.velocity, normal);
-
-    console.log(ball.velocity, position, normal, newVelocity);
+    const newVelocity = Vec2dTrait.reflect(ball.velocity, args.normal);
     return Im.replace(ball, 'velocity', () => newVelocity);
   }
 }

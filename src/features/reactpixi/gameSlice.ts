@@ -28,6 +28,7 @@ import {tryStgInstances} from '../../game/instances';
 import {PosTrait} from '../../game/components/pos';
 import {HealthTrait} from '../../game/components/health';
 import {BallMovementTrait} from '../../game/components/ball-movement';
+import {PaddleStatusTrait} from '../../game/components/paddle-status';
 
 type Stg = TryStgSetting;
 
@@ -71,7 +72,10 @@ const generateInitialGameState = (): GameState<Stg> => {
     mindType: 'defaultPaddle',
     body: {
       pos: PosTrait.create({pos: {x: 0, y: unit}}),
-      status: {size: {x: unit, y: unit / 2}},
+      status: PaddleStatusTrait.create({
+        size: {x: unit, y: unit / 4},
+        reflectOffset: {x: 0, y: 1 * unit},
+      }),
     },
     mind: {},
   };

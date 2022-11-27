@@ -8,6 +8,7 @@ import {
 } from 'curtain-call3';
 import {pipe} from 'rambda';
 import {BallMovementTrait} from '../components/ball-movement';
+import {PaddleStatusTrait} from '../components/paddle-status';
 import {TryStgSetting} from '../setting';
 
 type Stg = TryStgSetting;
@@ -27,13 +28,13 @@ export class BallHitToPaddleEv implements EventApplier<Stg, EvType> {
     if (paddle.err) throw new Error('no paddle');
 
     const newBallBody = Im.replace(ball.val, 'movement', mov => {
-      const pos = ball.val.pos.pos;
-      const prevPos = ball.val.pos.prevPos;
-      const wallShape = AaRect2dTrait.fromCenterAndSize(
-        paddle.val.pos.pos,
-        paddle.val.status.size
-      );
-      return BallMovementTrait.reflect(mov, {pos, prevPos, wallShape});
+      const ballPos = ball.val.pos.pos;
+      const reflectNormal = PaddleStatusTrait.calcReflectNormal({
+        ballPos,
+        paddle: paddle.val.status,
+        paddlePos: paddle.val.pos.pos,
+      });
+      return BallMovementTrait.reflectByNormal(mov, {normal: reflectNormal});
     });
 
     return pipe(

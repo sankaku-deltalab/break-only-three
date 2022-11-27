@@ -48,7 +48,7 @@ export class DefaultBallBeh implements ActressBehavior<Stg, BT, MT> {
     const posForArea = AaRect2dTrait.calcPointPosition(st.body.pos.pos, {
       area: gameAreaRect,
     });
-    const normal = Vec2dTrait.mlt(posForArea, -1);
+    const normal = posForArea;
     const oldVelocity = st.body.movement.velocity;
     const newVelocity = Vec2dTrait.isZero(normal)
       ? oldVelocity
