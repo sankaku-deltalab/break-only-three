@@ -5,7 +5,8 @@ import {
   DirectorBehavior,
   Enum,
   EventTrait,
-  GameHelper,
+  EventTypes,
+  GameStateHelper,
   GameState,
   Im,
   Overlaps,
@@ -50,7 +51,7 @@ export class Director implements DirectorBehavior<Stg> {
     const ballHitToPaddleEvents = pipe(
       () => other.overlaps,
       ov =>
-        GameHelper.filterOverlaps(ov, {
+        GameStateHelper.filterOverlaps(ov, {
           state: state,
           from: 'ball',
           to: 'paddle',
@@ -69,7 +70,7 @@ export class Director implements DirectorBehavior<Stg> {
     const ballHitToBlockEvents = pipe(
       () => other.overlaps,
       ov =>
-        GameHelper.filterOverlaps(ov, {
+        GameStateHelper.filterOverlaps(ov, {
           state: state,
           from: 'ball',
           to: 'block',
@@ -89,6 +90,10 @@ export class Director implements DirectorBehavior<Stg> {
   represent(state: GameState<Stg>): Representation<Stg> {
     return state.scene.level;
   }
+
+  getEventTypesOrderedByPriority(): EventTypes<Stg>[] {
+    return ['nop', 'ballHitToPaddle', 'ballHitToBlock', 'allBlocksAreBroken'];
+  }
 }
 
 const endGameIfCan = (
@@ -107,18 +112,18 @@ const endGameIfCan = (
     return pipe(
       () => st,
       st =>
-        GameHelper.addNotification(st, 'end', {
+        GameStateHelper.addNotification(st, 'end', {
           reason: 'abort',
           score: st.scene.level.score,
         }),
-      st => GameHelper.updateLevel(st, level => ({...level, ended: true})),
+      st => GameStateHelper.updateLevel(st, level => ({...level, ended: true})),
       st => Res.ok(st)
     )();
   }
 
   const thereIsNoBlocks = pipe(
     () => st,
-    st => GameHelper.getBodiesOf(st, 'block'),
+    st => GameStateHelper.getBodiesOf(st, 'block'),
     blocks => Object.entries(blocks),
     blocks => blocks.length === 0
   )();
@@ -126,18 +131,18 @@ const endGameIfCan = (
     return pipe(
       () => st,
       st =>
-        GameHelper.addNotification(st, 'end', {
+        GameStateHelper.addNotification(st, 'end', {
           reason: 'clear',
           score: st.scene.level.score,
         }),
-      st => GameHelper.updateLevel(st, level => ({...level, ended: true})),
+      st => GameStateHelper.updateLevel(st, level => ({...level, ended: true})),
       st => Res.ok(st)
     )();
   }
 
   const anyBallIsFallen = pipe(
     () => st,
-    st => GameHelper.getBodiesOf(st, 'ball'),
+    st => GameStateHelper.getBodiesOf(st, 'ball'),
     balls => Object.entries(balls),
     balls => Enum.map(balls, ([_, b]) => b.pos.pos.y >= gameAreaSE.y - b.diam),
     isFallen => isFallen.some(v => v)
@@ -146,11 +151,11 @@ const endGameIfCan = (
     return pipe(
       () => st,
       st =>
-        GameHelper.addNotification(st, 'end', {
+        GameStateHelper.addNotification(st, 'end', {
           reason: 'game-over',
           score: st.scene.level.score,
         }),
-      st => GameHelper.updateLevel(st, level => ({...level, ended: true})),
+      st => GameStateHelper.updateLevel(st, level => ({...level, ended: true})),
       st => Res.ok(st)
     )();
   }

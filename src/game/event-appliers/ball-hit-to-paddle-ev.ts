@@ -2,7 +2,7 @@ import {
   EventApplier,
   GameState,
   EventPayload,
-  GameHelper,
+  GameStateHelper,
   Im,
   AaRect2dTrait,
 } from 'curtain-call3';
@@ -21,8 +21,8 @@ export class BallHitToPaddleEv implements EventApplier<Stg, EvType> {
     state: GameState<Stg>,
     {ballId, paddleId}: EventPayload<Stg, EvType>
   ): GameState<Stg> {
-    const ball = GameHelper.getBody(state, ballId, 'ball');
-    const paddle = GameHelper.getBody(state, paddleId, 'paddle');
+    const ball = GameStateHelper.getBody(state, ballId, 'ball');
+    const paddle = GameStateHelper.getBody(state, paddleId, 'paddle');
 
     if (ball.err) throw new Error('no ball');
     if (paddle.err) throw new Error('no paddle');
@@ -39,7 +39,7 @@ export class BallHitToPaddleEv implements EventApplier<Stg, EvType> {
 
     return pipe(
       () => state,
-      st => GameHelper.replaceBodies(st, {[ballId]: newBallBody})
+      st => GameStateHelper.replaceBodies(st, {[ballId]: newBallBody})
     )();
   }
 }

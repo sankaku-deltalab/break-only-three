@@ -8,7 +8,7 @@ import {
   ActressInitializer,
   CanvasGraphic,
   Enum,
-  GameHelper,
+  GameStateHelper,
   GameProcessing,
   GameProgressController,
   GameProgressState,
@@ -113,7 +113,7 @@ const generateInitialGameState = (): GameState<Stg> => {
   return pipe(
     () => ({level: {score: 0, ended: false}, camera: {size: gameArea}}),
     args => GameProcessing.createInitialState<Stg>(args),
-    st => GameHelper.addActresses(st, acts).state
+    st => GameStateHelper.addActresses(st, acts).state
   )();
 };
 
