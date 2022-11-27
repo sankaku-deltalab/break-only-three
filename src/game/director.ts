@@ -4,6 +4,7 @@ import {
   BodyId,
   DirectorBehavior,
   Enum,
+  EventTrait,
   GameHelper,
   GameState,
   Im,
@@ -30,10 +31,10 @@ export class Director implements DirectorBehavior<Stg> {
     const st = pipe(
       () => state,
       st => Res.ok(st),
-      st => processBallHitWithBlocks(st, other),
-      st => processBallHitWithBlocks(st, other),
-      st => processBallHitWithWalls(st, other),
-      st => processBallHitWithPaddles(st, other),
+      // st => processBallHitWithBlocks(st, other),
+      // st => processBallHitWithBlocks(st, other),
+      // st => processBallHitWithWalls(st, other),
+      // st => processBallHitWithPaddles(st, other),
       st => endGameIfCan(st, other)
     )();
     if (st.err) throw Error(String(st.val));
@@ -41,179 +42,54 @@ export class Director implements DirectorBehavior<Stg> {
   }
 
   generateEvents(
-    st: GameState<Stg>,
+    state: GameState<Stg>,
     other: {
       overlaps: Overlaps;
     }
   ): AnyEvent<Stg>[] {
-    return [];
+    const ballHitToPaddleEvents = pipe(
+      () => other.overlaps,
+      ov =>
+        GameHelper.filterOverlaps(ov, {
+          state: state,
+          from: 'ball',
+          to: 'paddle',
+        }),
+      ov => RecM2MTrait.removeNonDestinations(ov),
+      ov => RecM2MTrait.toPairs(ov),
+      ov =>
+        ov.map(([ballId, paddleId]) =>
+          EventTrait.createEvent<Stg, 'ballHitToPaddle'>('ballHitToPaddle', {
+            ballId,
+            paddleId,
+          })
+        )
+    )();
+
+    const ballHitToBlockEvents = pipe(
+      () => other.overlaps,
+      ov =>
+        GameHelper.filterOverlaps(ov, {
+          state: state,
+          from: 'ball',
+          to: 'block',
+        }),
+      ov => RecM2MTrait.toPairs(ov),
+      ov =>
+        ov.map(([ballId, blockId]) =>
+          EventTrait.createEvent<Stg, 'ballHitToBlock'>('ballHitToBlock', {
+            ballId,
+            blockId,
+          })
+        )
+    )();
+    return [...ballHitToPaddleEvents, ...ballHitToBlockEvents];
   }
 
   represent(state: GameState<Stg>): Representation<Stg> {
     return state.scene.level;
   }
 }
-
-const processBallHitWithBlocks = (
-  state: Result<GameState<Stg>>,
-  other: {
-    overlaps: Overlaps;
-  }
-): Result<GameState<Stg>> => {
-  if (state.err) return state;
-
-  return pipe(
-    () => other.overlaps,
-    ov =>
-      GameHelper.filterOverlaps(ov, {
-        state: state.val,
-        from: 'ball',
-        to: 'block',
-      }),
-    ov => RecM2MTrait.toPairs(ov),
-    pairs =>
-      Enum.reduce(pairs, state, ([from, to], st: Result<GameState<Stg>>) => {
-        return processBallHitWithBlock(st, {ballId: from, blockId: to});
-      })
-  )();
-};
-
-const processBallHitWithBlock = (
-  state: Result<GameState<Stg>>,
-  args: {
-    ballId: BodyId;
-    blockId: BodyId;
-  }
-): Result<GameState<Stg>> => {
-  if (state.err) return state;
-
-  console.log('hit');
-
-  const ball = GameHelper.getBody(state.val, args.ballId, 'ball');
-  const block = GameHelper.getBody(state.val, args.blockId, 'block');
-
-  if (ball.err) return ball;
-  if (block.err) return block;
-
-  const newBallBody = Im.replace(ball.val, 'movement', mov => {
-    const pos = ball.val.pos.pos;
-    const prevPos = ball.val.pos.prevPos;
-    const wallShape = AaRect2dTrait.fromCenterAndSize(
-      block.val.pos.pos,
-      block.val.size
-    );
-    return BallMovementTrait.reflect(mov, {pos, prevPos, wallShape});
-  });
-
-  const newBlockBody = Im.replace(block.val, 'meta', meta => {
-    return {...meta, del: true};
-  });
-
-  return pipe(
-    () => state.val,
-    st =>
-      GameHelper.replaceBodies(st, {
-        [args.ballId]: newBallBody,
-        [args.blockId]: newBlockBody,
-      }),
-    st => Res.ok(st)
-  )();
-};
-
-const processBallHitWithWalls = (
-  state: Result<GameState<Stg>>,
-  other: {
-    overlaps: Overlaps;
-  }
-): Result<GameState<Stg>> => {
-  if (state.err) return state;
-
-  const overlaps = pipe(
-    () => other.overlaps,
-    ov =>
-      GameHelper.filterOverlaps(ov, {
-        state: state.val,
-        from: 'ball',
-        to: 'wall',
-      }),
-    ov => RecM2MTrait.removeNonDestinations(ov),
-    ov => RecM2MTrait.toPairs(ov)
-  )();
-
-  return Enum.reduce(overlaps, state, ([ballId, wallId], st) => {
-    const ball = GameHelper.getBody(state.val, ballId, 'ball');
-    const wall = GameHelper.getBody(state.val, wallId, 'wall');
-
-    if (ball.err) return ball;
-    if (wall.err) return wall;
-
-    const newBallBody = Im.replace(ball.val, 'movement', mov => {
-      const pos = ball.val.pos.pos;
-      const prevPos = ball.val.pos.prevPos;
-      const wallShape = wall.val.shape;
-      return BallMovementTrait.reflect(mov, {pos, prevPos, wallShape});
-    });
-
-    return pipe(
-      () => state.val,
-      st =>
-        GameHelper.updateBodies(st, (body, {bodyId}) => {
-          if (bodyId === ballId) return newBallBody;
-          return undefined;
-        }),
-      st => Res.ok(st)
-    )();
-  });
-};
-
-const processBallHitWithPaddles = (
-  state: Result<GameState<Stg>>,
-  other: {
-    overlaps: Overlaps;
-  }
-): Result<GameState<Stg>> => {
-  if (state.err) return state;
-
-  const overlaps = pipe(
-    () => other.overlaps,
-    ov =>
-      GameHelper.filterOverlaps(ov, {
-        state: state.val,
-        from: 'ball',
-        to: 'paddle',
-      }),
-    ov => RecM2MTrait.removeNonDestinations(ov),
-    ov => RecM2MTrait.toPairs(ov)
-  )();
-
-  return Enum.reduce(overlaps, state, ([ballId, paddleId], st) => {
-    const ball = GameHelper.getBody(state.val, ballId, 'ball');
-    const paddle = GameHelper.getBody(state.val, paddleId, 'paddle');
-
-    if (ball.err) return ball;
-    if (paddle.err) return paddle;
-
-    const newBallBody = Im.replace(ball.val, 'movement', mov => {
-      const pos = ball.val.pos.pos;
-      const prevPos = ball.val.pos.prevPos;
-      const wallShape = AaRect2dTrait.fromCenterAndSize(
-        paddle.val.pos.pos,
-        paddle.val.status.size
-      );
-      return BallMovementTrait.reflect(mov, {pos, prevPos, wallShape});
-    });
-
-    return pipe(
-      () => state.val,
-      st =>
-        GameHelper.updateBodies(st, (body, {bodyId}) => {
-          if (bodyId === ballId) return newBallBody;
-          return undefined;
-        }),
-      st => Res.ok(st)
-    )();
-  });
-};
 
 const endGameIfCan = (
   state: Result<GameState<Stg>>,
