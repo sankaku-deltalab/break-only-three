@@ -21,6 +21,7 @@ import {
   Representation,
   Vec2d,
   Vec2dTrait,
+  StateInitializer,
 } from 'curtain-call3';
 import {gameArea, unit} from '../../game/constants';
 import {GameEndReason, TryStgSetting} from '../../game/setting';
@@ -111,7 +112,10 @@ const generateInitialGameState = (): GameState<Stg> => {
   const acts = [paddle, ball, ...blocks];
 
   return pipe(
-    () => ({level: {score: 0, ended: false}, camera: {size: gameArea}}),
+    (): StateInitializer<Stg> => ({
+      level: {score: 0, ended: false, state: 'launching'},
+      camera: {size: gameArea},
+    }),
     args => GameProcessing.createInitialState<Stg>(args),
     st => GameStateHelper.addActresses(st, acts).state
   )();
