@@ -92,7 +92,13 @@ export class Director implements DirectorBehavior<Stg> {
   }
 
   getEventTypesOrderedByPriority(): EventTypes<Stg>[] {
-    return ['nop', 'ballHitToPaddle', 'ballHitToBlock', 'allBlocksAreBroken'];
+    return [
+      'nop',
+      'launchBall',
+      'ballHitToPaddle',
+      'ballHitToBlock',
+      'allBlocksAreBroken',
+    ];
   }
 }
 

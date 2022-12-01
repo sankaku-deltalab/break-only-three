@@ -72,16 +72,16 @@ const generateInitialGameState = (): GameState<Stg> => {
 
   const paddle = DefaultPaddleTrait.createActInit();
 
-  const ball: ActressInitializer<Stg, 'ball', 'defaultBall'> = {
-    bodyType: 'ball',
-    mindType: 'defaultBall',
-    body: {
-      pos: PosTrait.create({pos: Vec2dTrait.zero()}),
-      diam: unit / 8,
-      movement: BallMovementTrait.create(),
-    },
-    mind: {},
-  };
+  // const ball: ActressInitializer<Stg, 'ball', 'defaultBall'> = {
+  //   bodyType: 'ball',
+  //   mindType: 'defaultBall',
+  //   body: {
+  //     pos: PosTrait.create({pos: Vec2dTrait.zero()}),
+  //     diam: unit / 8,
+  //     movement: BallMovementTrait.create(),
+  //   },
+  //   mind: {},
+  // };
 
   const blocks = pipe(
     () => Im.range(0, 3),
@@ -100,7 +100,7 @@ const generateInitialGameState = (): GameState<Stg> => {
       ),
     v => v
   )();
-  const acts = [paddle, ball, ...blocks];
+  const acts = [paddle, ...blocks];
 
   return pipe(
     (): StateInitializer<Stg> => ({

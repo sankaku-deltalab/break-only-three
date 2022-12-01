@@ -6,10 +6,8 @@ export type BallMovement = {
 };
 
 export class BallMovementTrait {
-  static create(): BallMovement {
-    return {
-      velocity: {x: (1 * unit) / 1000, y: (-10 * unit) / 1000},
-    };
+  static create(opt: {velocity: Vec2d}): BallMovement {
+    return opt;
   }
 
   static setVelocity(velocity: Vec2d): BallMovement {

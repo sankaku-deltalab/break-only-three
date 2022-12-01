@@ -36,6 +36,7 @@ export type TryStgSetting = StrictAs<
     };
     events: {
       nop: {};
+      launchBall: {ballPos: Vec2d; velocity: Vec2d};
       ballHitToPaddle: {ballId: BodyId; paddleId: BodyId};
       ballHitToBlock: {ballId: BodyId; blockId: BodyId};
       allBlocksAreBroken: {};

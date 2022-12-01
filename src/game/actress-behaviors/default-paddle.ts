@@ -4,12 +4,17 @@ import {
   ActressBehavior,
   ActressInitializer,
   ActressState,
+  AnyEvent,
   Collision,
   CollisionHelper,
+  EventTrait,
+  GameState,
+  GameStateHelper,
   Graphic,
   Im,
   InputHelper,
   LineGraphicTrait,
+  Vec2d,
   Vec2dTrait,
   VisibleGameState,
 } from 'curtain-call3';
@@ -48,8 +53,9 @@ export class DefaultPaddleTrait {
   private static createInitialMind(): DefaultPaddleState {
     return {
       launcher: BallLauncherTrait.create({
-        directionSpeed: Math.PI * 0.5,
+        directionSpeed: Math.PI / 1000,
         directionRange: {min: -Math.PI * 0.75, max: -Math.PI * 0.25},
+        launchPosOffset: {x: 0, y: -unit / 2},
       }),
     };
   }
@@ -74,10 +80,50 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
       Vec2dTrait.add(st.body.pos.pos, delta),
       movableArea
     );
-    return Im.replace(st, 'body', b =>
-      Im.replace(b, 'pos', p => PosTrait.moveTo(p, newPos))
-    );
+
+    return Im.pipe(
+      () => st,
+      act =>
+        Im.replace(act, 'body', b =>
+          Im.replace(b, 'pos', p => PosTrait.moveTo(p, newPos))
+        ),
+      act =>
+        (act = Im.replace(act, 'ev', ev => [
+          ...ev,
+          ...this.generateLaunchBallEv(act, args),
+        ]))
+    )();
   }
+
+  private generateLaunchBallEv = (
+    act: ActressState<Stg, BT, MT>,
+    args: {
+      gameState: VisibleGameState<Stg>;
+    }
+  ): AnyEvent<Stg>[] => {
+    const st = args.gameState;
+
+    if (st.scene.level.ended) return [];
+    if (GameStateHelper.getLevel(st).automaton.type !== 'launching') return [];
+
+    if (!InputHelper.upped(st)) return [];
+
+    const ballPos = Vec2dTrait.add(
+      act.body.pos.pos,
+      act.mind.launcher.launchPosOffset
+    );
+    const velocity = Vec2dTrait.fromRadians(
+      act.mind.launcher.direction,
+      (10 * unit) / 1000
+    );
+
+    return [
+      EventTrait.createEvent<Stg, 'launchBall'>('launchBall', {
+        ballPos,
+        velocity,
+      }),
+    ];
+  };
 
   update(
     st: ActressState<Stg, BT, MT>,
@@ -110,7 +156,7 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
     const se = relArea.se;
     const ne = {x: relArea.nw.x, y: relArea.se.y};
     const sw = {x: relArea.se.x, y: relArea.nw.y};
-    const line = LineGraphicTrait.create({
+    const paddleLine = LineGraphicTrait.create({
       key: 'main',
       pos: st.body.pos.pos,
       color: 0xff0000,
@@ -119,7 +165,26 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
       closed: true,
       zIndex: 0,
     });
-    return [line];
+
+    const launchPos = st.mind.launcher.launchPosOffset;
+    const direction = Vec2dTrait.fromRadians(st.mind.launcher.direction, unit);
+    const launchDest = Vec2dTrait.add(launchPos, direction);
+    const launchLines =
+      GameStateHelper.getLevel(args.gameState).automaton.type !== 'launching'
+        ? []
+        : [
+            LineGraphicTrait.create({
+              key: 'launchGuide',
+              pos: st.body.pos.pos,
+              color: 0xff0000,
+              paths: [launchPos, launchDest],
+              thickness: 5,
+              closed: false,
+              zIndex: 0,
+            }),
+          ];
+
+    return [paddleLine, ...launchLines];
   }
 
   generateCollision(
@@ -145,11 +210,13 @@ export type BallLauncherState = Readonly<{
   direction: number;
   directionSpeed: number;
   directionRange: {min: number; max: number};
-  directionMoveSign: 0 | -1 | 1;
+  directionMoveSign: -1 | 1;
+  launchPosOffset: Vec2d;
 }>;
 
 export class BallLauncherTrait {
   static create(opt: {
+    launchPosOffset: Vec2d;
     directionSpeed: number;
     directionRange: {min: number; max: number};
   }): BallLauncherState {
@@ -165,11 +232,13 @@ export class BallLauncherTrait {
     args: {deltaMs: number}
   ): BallLauncherState {
     let dirSign = launcher.directionMoveSign;
-    let newDirection = launcher.directionSpeed * args.deltaMs * dirSign;
+    let newDirection =
+      launcher.direction +
+      Math.abs(launcher.directionSpeed * args.deltaMs) * dirSign;
     if (newDirection < launcher.directionRange.min) {
       newDirection = launcher.directionRange.min;
       dirSign = 1;
-    } else if (newDirection > launcher.directionRange.min) {
+    } else if (newDirection > launcher.directionRange.max) {
       newDirection = launcher.directionRange.max;
       dirSign = -1;
     }
