@@ -9,16 +9,16 @@ type StrictAs<Base, T extends Base> = T;
 export type GameEndReason = 'clear' | 'abort' | 'game-over';
 
 export type StateType =
-  | 'launching'
-  | 'released'
-  | 'fallen'
-  | 'annihilated'
-  | 'finished';
+  | {type: 'launching'}
+  | {type: 'released'}
+  | {type: 'fallen'}
+  | {type: 'annihilated'}
+  | {type: 'finished'};
 
 export type TryStgSetting = StrictAs<
   Setting,
   {
-    level: {score: number; ended: boolean; state: StateType};
+    level: {score: number; ended: boolean; automaton: StateType};
     bodies: {
       pc: {pos: Pos; health: Health}; // unused
       enemy: {pos: Pos; health: Health}; // unused
