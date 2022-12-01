@@ -30,6 +30,7 @@ import {PosTrait} from '../../game/components/pos';
 import {HealthTrait} from '../../game/components/health';
 import {BallMovementTrait} from '../../game/components/ball-movement';
 import {PaddleStatusTrait} from '../../game/components/paddle-status';
+import {BoLevelTrait} from '../../game/level';
 
 type Stg = TryStgSetting;
 
@@ -113,7 +114,7 @@ const generateInitialGameState = (): GameState<Stg> => {
 
   return pipe(
     (): StateInitializer<Stg> => ({
-      level: {score: 0, ended: false, state: 'launching'},
+      level: BoLevelTrait.createInitial(),
       camera: {size: gameArea},
     }),
     args => GameProcessing.createInitialState<Stg>(args),

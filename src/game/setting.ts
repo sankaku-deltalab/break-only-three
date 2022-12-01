@@ -3,22 +3,16 @@ import {BallMovement} from './components/ball-movement';
 import {Health} from './components/health';
 import {PaddleStatus} from './components/paddle-status';
 import {Pos} from './components/pos';
+import {BoLevelState} from './level';
 
 type StrictAs<Base, T extends Base> = T;
 
 export type GameEndReason = 'clear' | 'abort' | 'game-over';
 
-export type StateType =
-  | {type: 'launching'}
-  | {type: 'released'}
-  | {type: 'fallen'}
-  | {type: 'annihilated'}
-  | {type: 'finished'};
-
 export type TryStgSetting = StrictAs<
   Setting,
   {
-    level: {score: number; ended: boolean; automaton: StateType};
+    level: BoLevelState;
     bodies: {
       pc: {pos: Pos; health: Health}; // unused
       enemy: {pos: Pos; health: Health}; // unused
