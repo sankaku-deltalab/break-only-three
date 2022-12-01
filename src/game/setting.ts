@@ -1,4 +1,5 @@
 import {AaRect2d, BodyId, Setting, Vec2d} from 'curtain-call3';
+import {DefaultPaddleState} from './actress-behaviors/default-paddle';
 import {BallMovement} from './components/ball-movement';
 import {Health} from './components/health';
 import {PaddleStatus} from './components/paddle-status';
@@ -26,7 +27,7 @@ export type TryStgSetting = StrictAs<
     minds: {
       defaultPc: {a: number}; // unused
       defaultEnemy: {}; // unused
-      defaultPaddle: {};
+      defaultPaddle: DefaultPaddleState;
       defaultWall: {}; // unused
       defaultBall: {};
       defaultBlock: {};

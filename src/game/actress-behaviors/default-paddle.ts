@@ -2,6 +2,7 @@ import product from 'immer';
 import {
   AaRect2dTrait,
   ActressBehavior,
+  ActressInitializer,
   ActressState,
   Collision,
   CollisionHelper,
@@ -15,6 +16,7 @@ import {
 import {gameArea, gameAreaRect, unit} from '../constants';
 import {collisionModes, TryStgSetting} from '../setting';
 import {PosTrait} from '../components/pos';
+import {PaddleStatusTrait} from '../components/paddle-status';
 
 type Stg = TryStgSetting;
 
@@ -22,6 +24,36 @@ const bt = 'paddle';
 const mt = 'defaultPaddle';
 type BT = typeof bt;
 type MT = typeof mt;
+
+export type DefaultPaddleState = {
+  launcher: BallLauncherState;
+};
+
+export class DefaultPaddleTrait {
+  static createActInit(): ActressInitializer<Stg, 'paddle', 'defaultPaddle'> {
+    return {
+      bodyType: 'paddle',
+      mindType: 'defaultPaddle',
+      body: {
+        pos: PosTrait.create({pos: {x: 0, y: unit}}),
+        status: PaddleStatusTrait.create({
+          size: {x: unit, y: unit / 4},
+          reflectOffset: {x: 0, y: 1 * unit},
+        }),
+      },
+      mind: DefaultPaddleTrait.createInitialMind(),
+    };
+  }
+
+  private static createInitialMind(): DefaultPaddleState {
+    return {
+      launcher: BallLauncherTrait.create({
+        directionSpeed: Math.PI * 0.5,
+        directionRange: {min: -Math.PI * 0.75, max: -Math.PI * 0.25},
+      }),
+    };
+  }
+}
 
 export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
   readonly bodyType = bt;
@@ -53,7 +85,15 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
       gameState: VisibleGameState<Stg>;
     }
   ): ActressState<Stg, BT, MT> {
-    return st;
+    let act = st;
+    if (args.gameState.scene.level.automaton.type === 'launching') {
+      act = Im.replace2(act, ['mind', 'launcher'], la =>
+        BallLauncherTrait.update(la, {
+          deltaMs: args.gameState.time.lastDeltaMs,
+        })
+      );
+    }
+    return act;
   }
 
   generateGraphics(
@@ -98,5 +138,45 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
       mode: collisionModes.any,
       excess: false,
     };
+  }
+}
+
+export type BallLauncherState = Readonly<{
+  direction: number;
+  directionSpeed: number;
+  directionRange: {min: number; max: number};
+  directionMoveSign: 0 | -1 | 1;
+}>;
+
+export class BallLauncherTrait {
+  static create(opt: {
+    directionSpeed: number;
+    directionRange: {min: number; max: number};
+  }): BallLauncherState {
+    return {
+      ...opt,
+      direction: opt.directionRange.min,
+      directionMoveSign: 1,
+    };
+  }
+
+  static update(
+    launcher: BallLauncherState,
+    args: {deltaMs: number}
+  ): BallLauncherState {
+    let dirSign = launcher.directionMoveSign;
+    let newDirection = launcher.directionSpeed * args.deltaMs * dirSign;
+    if (newDirection < launcher.directionRange.min) {
+      newDirection = launcher.directionRange.min;
+      dirSign = 1;
+    } else if (newDirection > launcher.directionRange.min) {
+      newDirection = launcher.directionRange.max;
+      dirSign = -1;
+    }
+    return Im.pipe(
+      () => launcher,
+      la => Im.replace(la, 'direction', () => newDirection),
+      la => Im.replace(la, 'directionMoveSign', () => dirSign)
+    )();
   }
 }

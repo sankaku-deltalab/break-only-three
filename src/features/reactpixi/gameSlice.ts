@@ -31,6 +31,7 @@ import {HealthTrait} from '../../game/components/health';
 import {BallMovementTrait} from '../../game/components/ball-movement';
 import {PaddleStatusTrait} from '../../game/components/paddle-status';
 import {BoLevelTrait} from '../../game/level';
+import {DefaultPaddleTrait} from '../../game/actress-behaviors/default-paddle';
 
 type Stg = TryStgSetting;
 
@@ -69,18 +70,7 @@ const generateInitialGameState = (): GameState<Stg> => {
     mind: {a: 0},
   };
 
-  const paddle: ActressInitializer<Stg, 'paddle', 'defaultPaddle'> = {
-    bodyType: 'paddle',
-    mindType: 'defaultPaddle',
-    body: {
-      pos: PosTrait.create({pos: {x: 0, y: unit}}),
-      status: PaddleStatusTrait.create({
-        size: {x: unit, y: unit / 4},
-        reflectOffset: {x: 0, y: 1 * unit},
-      }),
-    },
-    mind: {},
-  };
+  const paddle = DefaultPaddleTrait.createActInit();
 
   const ball: ActressInitializer<Stg, 'ball', 'defaultBall'> = {
     bodyType: 'ball',

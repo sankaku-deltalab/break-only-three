@@ -1,4 +1,3 @@
-import product from 'immer';
 import {
   ActressBehavior,
   ActressState,
@@ -17,6 +16,10 @@ import {PosTrait} from '../components/pos';
 type Stg = TryStgSetting;
 type BT = 'pc';
 type MT = 'defaultPc';
+
+export type DefaultPcState = {
+  launcher: BallLauncherState;
+};
 
 export class DefaultPCBeh implements ActressBehavior<Stg, BT, MT> {
   readonly bodyType = 'pc';
@@ -78,5 +81,45 @@ export class DefaultPCBeh implements ActressBehavior<Stg, BT, MT> {
       },
       excess: false,
     };
+  }
+}
+
+export type BallLauncherState = Readonly<{
+  direction: number;
+  directionSpeed: number;
+  directionRange: {min: number; max: number};
+  directionMoveSign: 0 | -1 | 1;
+}>;
+
+export class BallLauncherTrait {
+  static create(opt: {
+    directionSpeed: number;
+    directionRange: {min: number; max: number};
+  }): BallLauncherState {
+    return {
+      ...opt,
+      direction: opt.directionRange.min,
+      directionMoveSign: 1,
+    };
+  }
+
+  static update(
+    launcher: BallLauncherState,
+    args: {deltaMs: number}
+  ): BallLauncherState {
+    let dirSign = launcher.directionMoveSign;
+    let newDirection = launcher.directionSpeed * args.deltaMs * dirSign;
+    if (newDirection < launcher.directionRange.min) {
+      newDirection = launcher.directionRange.min;
+      dirSign = 1;
+    } else if (newDirection > launcher.directionRange.min) {
+      newDirection = launcher.directionRange.max;
+      dirSign = -1;
+    }
+    return Im.pipe(
+      () => launcher,
+      la => Im.replace(la, 'direction', () => newDirection),
+      la => Im.replace(la, 'directionMoveSign', () => dirSign)
+    )();
   }
 }
