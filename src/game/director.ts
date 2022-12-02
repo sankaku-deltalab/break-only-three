@@ -14,6 +14,7 @@ import {
   Representation,
   Res,
   Result,
+  EventPriority,
 } from 'curtain-call3';
 import {pipe} from 'rambda';
 import {BallMovementTrait} from './components/ball-movement';
@@ -91,14 +92,11 @@ export class Director implements DirectorBehavior<Stg> {
     return state.scene.level;
   }
 
-  getEventTypesOrderedByPriority(): EventTypes<Stg>[] {
-    return [
-      'nop',
-      'launchBall',
-      'ballHitToPaddle',
-      'ballHitToBlock',
-      'allBlocksAreBroken',
-    ];
+  getEventPriority(): EventPriority<Stg> {
+    return {
+      earlier: ['launchBall'],
+      later: ['allBlocksAreBroken'],
+    };
   }
 }
 
