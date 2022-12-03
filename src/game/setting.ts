@@ -15,24 +15,16 @@ export type TryStgSetting = StrictAs<
   {
     level: BoLevelState;
     bodies: {
-      pc: {pos: Pos; health: Health}; // unused
-      enemy: {pos: Pos; health: Health}; // unused
       paddle: {pos: Pos; status: PaddleStatus};
       ball: {pos: Pos; movement: BallMovement; diam: number};
       block: {pos: Pos; size: Vec2d};
       wall: {shape: AaRect2d}; // unused
-      // pcBullet: {pos: Vec2d; velocity: Vec2d};
-      // enemyBullet: {pos: Vec2d; velocity: Vec2d};
     };
     minds: {
-      defaultPc: {a: number}; // unused
-      defaultEnemy: {}; // unused
       defaultPaddle: DefaultPaddleState;
       defaultWall: {}; // unused
       defaultBall: {};
       defaultBlock: {};
-      // defaultPcBullet: {};
-      // defaultEnemyBullet: {};
     };
     events: {
       nop: {};
