@@ -60,28 +60,7 @@ export type GameSliceState = {
 };
 
 const generateInitialGameState = (): GameState<Stg> => {
-  const pc: ActressInitializer<Stg, 'pc', 'defaultPc'> = {
-    bodyType: 'pc',
-    mindType: 'defaultPc',
-    body: {
-      pos: PosTrait.create({pos: Vec2dTrait.zero()}),
-      health: HealthTrait.create(150),
-    },
-    mind: {a: 0},
-  };
-
   const paddle = DefaultPaddleTrait.createActInit();
-
-  // const ball: ActressInitializer<Stg, 'ball', 'defaultBall'> = {
-  //   bodyType: 'ball',
-  //   mindType: 'defaultBall',
-  //   body: {
-  //     pos: PosTrait.create({pos: Vec2dTrait.zero()}),
-  //     diam: unit / 8,
-  //     movement: BallMovementTrait.create(),
-  //   },
-  //   mind: {},
-  // };
 
   const blocks = pipe(
     () => Im.range(0, 3),
