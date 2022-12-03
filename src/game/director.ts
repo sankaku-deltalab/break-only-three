@@ -15,6 +15,7 @@ import {
   Res,
   Result,
   EventPriority,
+  TimeScaling,
 } from 'curtain-call3';
 import {pipe} from 'rambda';
 import {BallMovementTrait} from './components/ball-movement';
@@ -123,6 +124,14 @@ export class Director implements DirectorBehavior<Stg> {
       ...ballFallenEvents,
       ...fallenStateWasFinishedEvents,
     ];
+  }
+
+  getTimeScales(state: GameState<Stg>): TimeScaling<Stg> {
+    const stateType = GameStateHelper.getLevel(state).automaton.type;
+    if (stateType === 'finished') return {base: 0.0};
+    if (stateType === 'fallen') return {base: 0.125};
+
+    return {base: 1.0};
   }
 
   represent(state: GameState<Stg>): Representation<Stg> {

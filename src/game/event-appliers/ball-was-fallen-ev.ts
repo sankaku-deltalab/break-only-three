@@ -20,7 +20,7 @@ export class BallWasFallenEv implements EventApplier<Stg, EvType> {
   ): GameState<Stg> {
     return Im.pipe(
       () => state,
-      st => BoLevelTrait.changeToFallenState(st, {durationMs: 50})
+      st => BoLevelTrait.changeToFallenState(st, {durationMs: 1000})
     )();
   }
 }
