@@ -7,6 +7,7 @@ import {Director} from './director';
 import {AllBlocksAreBrokenEv} from './event-appliers/all-blocks-are-broken-ev';
 import {BallHitToBlockEv} from './event-appliers/ball-hit-to-block-ev';
 import {BallHitToPaddleEv} from './event-appliers/ball-hit-to-paddle-ev';
+import {BallWasFallenEv} from './event-appliers/ball-was-fallen-ev';
 import {LaunchBallEv} from './event-appliers/launch-ball-ev';
 import {NopEv} from './event-appliers/nop-ev';
 import {TryStgSetting} from './setting';
@@ -27,5 +28,6 @@ export const tryStgInstances: GameInstances<TryStgSetting> = {
     ballHitToPaddle: new BallHitToPaddleEv(),
     ballHitToBlock: new BallHitToBlockEv(),
     allBlocksAreBroken: new AllBlocksAreBrokenEv(),
+    ballWasFallen: new BallWasFallenEv(),
   },
 };
