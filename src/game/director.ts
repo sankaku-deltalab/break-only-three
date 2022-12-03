@@ -19,6 +19,7 @@ import {
 import {pipe} from 'rambda';
 import {BallMovementTrait} from './components/ball-movement';
 import {gameAreaSE} from './constants';
+import {BoLevelTrait} from './level';
 import {TryStgSetting} from './setting';
 
 type Stg = TryStgSetting;
@@ -85,7 +86,43 @@ export class Director implements DirectorBehavior<Stg> {
           })
         )
     )();
-    return [...ballHitToPaddleEvents, ...ballHitToBlockEvents];
+
+    const fallenFirstBall = pipe(
+      () => state,
+      st => GameStateHelper.getBodiesOf(st, 'ball'),
+      balls => Object.entries(balls),
+      balls =>
+        Enum.filter(balls, ([_, b]) => b.pos.pos.y >= gameAreaSE.y - b.diam),
+      balls => (balls.length > 0 ? balls[0][0] : undefined)
+    )();
+    const ballFallenEvents =
+      fallenFirstBall === undefined
+        ? []
+        : [
+            EventTrait.createEvent<Stg, 'ballWasFallen'>('ballWasFallen', {
+              ballId: fallenFirstBall,
+            }),
+          ];
+
+    const fallenStateWasFinished = BoLevelTrait.fallenStateWasFinished(
+      state,
+      {}
+    );
+    const fallenStateWasFinishedEvents = !fallenStateWasFinished
+      ? []
+      : [
+          EventTrait.createEvent<Stg, 'fallenStateWasFinished'>(
+            'fallenStateWasFinished',
+            {}
+          ),
+        ];
+
+    return [
+      ...ballHitToPaddleEvents,
+      ...ballHitToBlockEvents,
+      ...ballFallenEvents,
+      ...fallenStateWasFinishedEvents,
+    ];
   }
 
   represent(state: GameState<Stg>): Representation<Stg> {
@@ -144,25 +181,25 @@ const endGameIfCan = (
     )();
   }
 
-  const anyBallIsFallen = pipe(
-    () => st,
-    st => GameStateHelper.getBodiesOf(st, 'ball'),
-    balls => Object.entries(balls),
-    balls => Enum.map(balls, ([_, b]) => b.pos.pos.y >= gameAreaSE.y - b.diam),
-    isFallen => isFallen.some(v => v)
-  )();
-  if (anyBallIsFallen) {
-    return pipe(
-      () => st,
-      st =>
-        GameStateHelper.addNotification(st, 'end', {
-          reason: 'game-over',
-          score: st.scene.level.score,
-        }),
-      st => GameStateHelper.updateLevel(st, level => ({...level, ended: true})),
-      st => Res.ok(st)
-    )();
-  }
+  // const anyBallIsFallen = pipe(
+  //   () => st,
+  //   st => GameStateHelper.getBodiesOf(st, 'ball'),
+  //   balls => Object.entries(balls),
+  //   balls => Enum.map(balls, ([_, b]) => b.pos.pos.y >= gameAreaSE.y - b.diam),
+  //   isFallen => isFallen.some(v => v)
+  // )();
+  // if (anyBallIsFallen) {
+  //   return pipe(
+  //     () => st,
+  //     st =>
+  //       GameStateHelper.addNotification(st, 'end', {
+  //         reason: 'game-over',
+  //         score: st.scene.level.score,
+  //       }),
+  //     st => GameStateHelper.updateLevel(st, level => ({...level, ended: true})),
+  //     st => Res.ok(st)
+  //   )();
+  // }
 
   return state;
 };

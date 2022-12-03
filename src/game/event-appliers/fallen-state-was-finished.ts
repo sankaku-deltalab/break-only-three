@@ -10,17 +10,22 @@ import {TryStgSetting} from '../setting';
 
 type Stg = TryStgSetting;
 
-const evType = 'ballWasFallen';
+const evType = 'fallenStateWasFinished';
 type EvType = typeof evType;
 
-export class BallWasFallenEv implements EventApplier<Stg, EvType> {
+export class FallenStateWasFinishedEv implements EventApplier<Stg, EvType> {
   applyEvent(
     state: GameState<Stg>,
-    {ballId}: EventPayload<Stg, EvType>
+    {}: EventPayload<Stg, EvType>
   ): GameState<Stg> {
     return Im.pipe(
       () => state,
-      st => BoLevelTrait.changeToFallenState(st, {durationMs: 50})
+      st =>
+        GameStateHelper.addNotification(st, 'end', {
+          reason: 'game-over',
+          score: st.scene.level.score,
+        }),
+      st => BoLevelTrait.changeToFinishedState(st, {})
     )();
   }
 }

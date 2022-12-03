@@ -33,6 +33,7 @@ export type TryStgSetting = StrictAs<
       ballHitToBlock: {ballId: BodyId; blockId: BodyId};
       allBlocksAreBroken: {};
       ballWasFallen: {ballId: BodyId};
+      fallenStateWasFinished: {};
     };
     representation: {score: number; ended: boolean};
     notifications: {
