@@ -6,6 +6,7 @@ import {
   GameStateHelper,
   Im,
   Vec2d,
+  Vec2dTrait,
 } from 'curtain-call3';
 import {gameArea, gameAreaRect, unit} from './constants';
 import {TryStgSetting} from './setting';
@@ -32,7 +33,7 @@ export class BoLevelTrait {
     return {
       score: 0,
       ended: false,
-      wholeVelocity: {x: -unit / 2000, y: unit / 2000},
+      wholeVelocity: Vec2dTrait.mlt({x: -unit / 2000, y: unit / 2000}, 2.0),
       wholeMovementFreezeEndTimeMs: -1,
       automaton: {type: 'launching'},
     };
