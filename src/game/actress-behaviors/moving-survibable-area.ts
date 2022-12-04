@@ -43,21 +43,7 @@ export class MovingSurvivableArea implements ActressBehavior<Stg, BT, MT> {
       gameState: VisibleGameState<Stg>;
     }
   ): ActressState<Stg, BT, MT> {
-    let act = st;
-
-    if (GameStateHelper.getLevel(args.gameState).automaton.type !== 'released')
-      return act;
-
-    if (args.gameState.time.gameTimeMs >= st.body.freezeEndTimeMs) {
-      const delta = Vec2dTrait.mlt(
-        GameStateHelper.getLevel(args.gameState).wholeVelocity,
-        args.gameState.time.lastDeltaMs
-      );
-      act = Im.replace2(act, ['body', 'area'], area =>
-        AaRect2dTrait.move(area, delta)
-      );
-    }
-    return act;
+    return st;
   }
 
   generateGraphics(
@@ -100,7 +86,6 @@ export class MovingSurvivableAreaTrait {
       mindType: mt,
       body: {
         area: {nw: gameAreaNW, se: gameAreaSE},
-        freezeEndTimeMs: -1,
       },
       mind: {
         velocity: {x: -unit / 1000, y: unit / 1000},

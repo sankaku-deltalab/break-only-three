@@ -16,9 +16,13 @@ import {
   Result,
   EventPriority,
   TimeScaling,
+  Vec2dTrait,
+  BodyState,
+  ActressHelper,
 } from 'curtain-call3';
 import {pipe} from 'rambda';
 import {BallMovementTrait} from './components/ball-movement';
+import {PosTrait} from './components/pos';
 import {gameAreaSE} from './constants';
 import {BoLevelTrait} from './level';
 import {TryStgSetting} from './setting';
@@ -35,10 +39,7 @@ export class Director implements DirectorBehavior<Stg> {
     const st = pipe(
       () => state,
       st => Res.ok(st),
-      // st => processBallHitWithBlocks(st, other),
-      // st => processBallHitWithBlocks(st, other),
-      // st => processBallHitWithWalls(st, other),
-      // st => processBallHitWithPaddles(st, other),
+      st => processWholeMovement(st, other),
       st => endGameIfCan(st, other)
     )();
     if (st.err) throw Error(String(st.val));
@@ -74,6 +75,81 @@ export class Director implements DirectorBehavior<Stg> {
     };
   }
 }
+
+const processWholeMovement = (
+  state: Result<GameState<Stg>>,
+  other: {
+    overlaps: Overlaps;
+  }
+): Result<GameState<Stg>> => {
+  if (state.err) return state;
+
+  let st = state.val;
+
+  if (GameStateHelper.getLevel(st).automaton.type !== 'released')
+    return Res.ok(st);
+
+  if (st.time.gameTimeMs < st.scene.level.wholeMovementFreezeEndTimeMs)
+    return Res.ok(st);
+
+  const delta = Vec2dTrait.mlt(
+    GameStateHelper.getLevel(st).wholeVelocity,
+    st.time.lastDeltaMs
+  );
+
+  st = GameStateHelper.updateBodies(st, body => {
+    if (ActressHelper.bodyIsInType(body, 'block')) {
+      return Im.replace(body, 'pos', p => PosTrait.move(p, delta));
+    }
+    if (ActressHelper.bodyIsInType(body, 'survivableArea')) {
+      return Im.replace(body, 'area', area => AaRect2dTrait.move(area, delta));
+    }
+    return undefined;
+  });
+
+  return Res.ok(st);
+
+  // const thereIsNoBlocks = pipe(
+  //   () => st,
+  //   st => GameStateHelper.getBodiesOf(st, 'block'),
+  //   blocks => Object.entries(blocks),
+  //   blocks => blocks.length === 0
+  // )();
+  // if (thereIsNoBlocks) {
+  //   return pipe(
+  //     () => st,
+  //     st =>
+  //       GameStateHelper.addNotification(st, 'end', {
+  //         reason: 'clear',
+  //         score: st.scene.level.score,
+  //       }),
+  //     st => GameStateHelper.updateLevel(st, level => ({...level, ended: true})),
+  //     st => Res.ok(st)
+  //   )();
+  // }
+
+  // const anyBallIsFallen = pipe(
+  //   () => st,
+  //   st => GameStateHelper.getBodiesOf(st, 'ball'),
+  //   balls => Object.entries(balls),
+  //   balls => Enum.map(balls, ([_, b]) => b.pos.pos.y >= gameAreaSE.y - b.diam),
+  //   isFallen => isFallen.some(v => v)
+  // )();
+  // if (anyBallIsFallen) {
+  //   return pipe(
+  //     () => st,
+  //     st =>
+  //       GameStateHelper.addNotification(st, 'end', {
+  //         reason: 'game-over',
+  //         score: st.scene.level.score,
+  //       }),
+  //     st => GameStateHelper.updateLevel(st, level => ({...level, ended: true})),
+  //     st => Res.ok(st)
+  //   )();
+  // }
+
+  return state;
+};
 
 const endGameIfCan = (
   state: Result<GameState<Stg>>,

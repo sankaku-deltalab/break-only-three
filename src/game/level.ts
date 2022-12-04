@@ -23,6 +23,7 @@ export type BoLevelState = {
   score: number;
   ended: boolean;
   wholeVelocity: Vec2d;
+  wholeMovementFreezeEndTimeMs: number;
   automaton: StateType;
 };
 
@@ -32,6 +33,7 @@ export class BoLevelTrait {
       score: 0,
       ended: false,
       wholeVelocity: {x: -unit / 2000, y: unit / 2000},
+      wholeMovementFreezeEndTimeMs: -1,
       automaton: {type: 'launching'},
     };
   }
