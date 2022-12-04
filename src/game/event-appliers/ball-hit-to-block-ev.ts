@@ -7,8 +7,12 @@ import {
   EventManipulator,
   Overlaps,
   RecM2MTrait,
+  Vec2d,
+  ActressHelper,
 } from 'curtain-call3';
 import {BallMovementTrait} from '../components/ball-movement';
+import {LineEffect, LineEffectTrait} from '../components/line-effect';
+import {unit} from '../constants';
 import {TryStgSetting} from '../setting';
 
 type Stg = TryStgSetting;
@@ -64,13 +68,45 @@ export class BallHitToBlockEv implements EventManipulator<Stg, EvType> {
       return {...meta, del: true};
     });
 
+    const effectInit = ActressHelper.createActressInitializer<
+      Stg,
+      'effectBody',
+      'linesEffect'
+    >({
+      bodyType: 'effectBody',
+      mindType: 'linesEffect',
+      body: {},
+      mind: {effects: createLineEffects(block.val.pos.pos)},
+    });
+
     return Im.pipe(
       () => state,
       st =>
         GameStateHelper.replaceBodies(st, {
           [ballId]: newBallBody,
           [blockId]: newBlockBody,
-        })
+        }),
+      st => GameStateHelper.addActress(st, effectInit).state
     )();
   }
 }
+
+const createLineEffects = (origin: Vec2d): LineEffect[] => {
+  return Im.range(0, 5).map(i => {
+    const destRel = {
+      x: (Math.random() - 0.5) * 8 * unit,
+      y: (Math.random() - 0.5) * 8 * unit,
+    };
+    return LineEffectTrait.create({
+      lifeTimeMs: 500,
+      activateDelayMs: 0,
+      startPos: origin,
+      destRel,
+
+      key: `line${i}`,
+      zIndex: 0,
+      color: 0xffffff,
+      thickness: unit / 8,
+    });
+  });
+};

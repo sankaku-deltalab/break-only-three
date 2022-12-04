@@ -25,8 +25,8 @@ export type LineEffect = {
 };
 
 export class LineEffectTrait {
-  static create(opt: LineEffect): LineEffect {
-    return opt;
+  static create(opt: Omit<LineEffect, 'elapsedTimeMs'>): LineEffect {
+    return {...opt, elapsedTimeMs: 0};
   }
 
   static update(line: LineEffect, deltaMs: number): LineEffect {
@@ -69,7 +69,7 @@ export class LineEffectTrait {
     const t = (line.elapsedTimeMs - line.activateDelayMs) / lifeTime;
     if (t < 0) return 0;
     if (t > 1) return line.thickness;
-    return line.thickness / t;
+    return line.thickness * t;
   }
 
   static generateGraphics(line: LineEffect): LineGraphic[] {
