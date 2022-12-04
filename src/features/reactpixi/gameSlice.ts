@@ -33,6 +33,7 @@ import {PaddleStatusTrait} from '../../game/components/paddle-status';
 import {BoLevelTrait} from '../../game/level';
 import {DefaultPaddleTrait} from '../../game/actress-behaviors/default-paddle';
 import {MovingSurvivableAreaTrait} from '../../game/actress-behaviors/moving-survibable-area';
+import {WholeGameProcessing} from '../../game/whole-processing';
 
 type Stg = TryStgSetting;
 
@@ -61,37 +62,14 @@ export type GameSliceState = {
 };
 
 const generateInitialGameState = (): GameState<Stg> => {
-  const paddle = DefaultPaddleTrait.createActInit();
-  const survivableArea = MovingSurvivableAreaTrait.createActInit();
-
-  const blocks = pipe(
-    () => Im.range(0, 3),
-    r =>
-      Enum.map(
-        r,
-        (i): ActressInitializer<Stg, 'block', 'defaultBlock'> => ({
-          bodyType: 'block',
-          mindType: 'defaultBlock',
-          body: {
-            pos: PosTrait.create({pos: {x: (i * 5 * unit) / 6, y: -unit}}),
-            size: {x: unit / 2, y: unit / 4},
-          },
-          mind: {},
-        })
-      ),
-    v => v
-  )();
-
-  const acts = [paddle, survivableArea, ...blocks];
-
-  return pipe(
-    (): StateInitializer<Stg> => ({
-      level: BoLevelTrait.createInitial(),
-      camera: {size: gameArea},
-    }),
-    args => GameProcessing.createInitialState<Stg>(args),
-    st => GameStateHelper.addActresses(st, acts).state
-  )();
+  return WholeGameProcessing.initGameState({
+    scoreMlt: 1,
+    blockPositions: Enum.map(Im.range(0, 3), i => ({
+      x: (i * 5 * unit) / 6,
+      y: -unit,
+    })),
+    wholeVelocity: Vec2dTrait.mlt({x: -unit / 2000, y: unit / 2000}, 2.0),
+  });
 };
 
 const initialState: GameSliceState = {

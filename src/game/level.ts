@@ -29,11 +29,11 @@ export type BoLevelState = {
 };
 
 export class BoLevelTrait {
-  static createInitial(): BoLevelState {
+  static createInitial(opt: {wholeVelocity: Vec2d}): BoLevelState {
     return {
       score: 0,
       ended: false,
-      wholeVelocity: Vec2dTrait.mlt({x: -unit / 2000, y: unit / 2000}, 2.0),
+      wholeVelocity: opt.wholeVelocity,
       wholeMovementFreezeEndTimeMs: -1,
       automaton: {type: 'launching'},
     };
