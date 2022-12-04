@@ -38,7 +38,6 @@ export class LinesEffectBeh implements ActressBehavior<Stg, BT, MT> {
     }
   ): ActressState<Stg, BT, MT> {
     let act = st;
-    console.log('line upd', act.mind);
 
     const deltaMs = args.gameState.time.lastDeltaMs;
     act = Im.replace2(act, ['mind', 'effects'], lines =>
@@ -49,7 +48,6 @@ export class LinesEffectBeh implements ActressBehavior<Stg, BT, MT> {
       LineEffectTrait.isEnded(line)
     );
     if (allEffectsWereEnded) {
-      console.log('line ended', act.mind);
       act = ActressHelper.delActress(act);
     }
 
