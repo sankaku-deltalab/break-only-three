@@ -108,47 +108,6 @@ const processWholeMovement = (
   });
 
   return Res.ok(st);
-
-  // const thereIsNoBlocks = pipe(
-  //   () => st,
-  //   st => GameStateHelper.getBodiesOf(st, 'block'),
-  //   blocks => Object.entries(blocks),
-  //   blocks => blocks.length === 0
-  // )();
-  // if (thereIsNoBlocks) {
-  //   return pipe(
-  //     () => st,
-  //     st =>
-  //       GameStateHelper.addNotification(st, 'end', {
-  //         reason: 'clear',
-  //         score: st.scene.level.score,
-  //       }),
-  //     st => GameStateHelper.updateLevel(st, level => ({...level, ended: true})),
-  //     st => Res.ok(st)
-  //   )();
-  // }
-
-  // const anyBallIsFallen = pipe(
-  //   () => st,
-  //   st => GameStateHelper.getBodiesOf(st, 'ball'),
-  //   balls => Object.entries(balls),
-  //   balls => Enum.map(balls, ([_, b]) => b.pos.pos.y >= gameAreaSE.y - b.diam),
-  //   isFallen => isFallen.some(v => v)
-  // )();
-  // if (anyBallIsFallen) {
-  //   return pipe(
-  //     () => st,
-  //     st =>
-  //       GameStateHelper.addNotification(st, 'end', {
-  //         reason: 'game-over',
-  //         score: st.scene.level.score,
-  //       }),
-  //     st => GameStateHelper.updateLevel(st, level => ({...level, ended: true})),
-  //     st => Res.ok(st)
-  //   )();
-  // }
-
-  return state;
 };
 
 const endGameIfCan = (
@@ -175,45 +134,6 @@ const endGameIfCan = (
       st => Res.ok(st)
     )();
   }
-
-  // const thereIsNoBlocks = pipe(
-  //   () => st,
-  //   st => GameStateHelper.getBodiesOf(st, 'block'),
-  //   blocks => Object.entries(blocks),
-  //   blocks => blocks.length === 0
-  // )();
-  // if (thereIsNoBlocks) {
-  //   return pipe(
-  //     () => st,
-  //     st =>
-  //       GameStateHelper.addNotification(st, 'end', {
-  //         reason: 'clear',
-  //         score: st.scene.level.score,
-  //       }),
-  //     st => GameStateHelper.updateLevel(st, level => ({...level, ended: true})),
-  //     st => Res.ok(st)
-  //   )();
-  // }
-
-  // const anyBallIsFallen = pipe(
-  //   () => st,
-  //   st => GameStateHelper.getBodiesOf(st, 'ball'),
-  //   balls => Object.entries(balls),
-  //   balls => Enum.map(balls, ([_, b]) => b.pos.pos.y >= gameAreaSE.y - b.diam),
-  //   isFallen => isFallen.some(v => v)
-  // )();
-  // if (anyBallIsFallen) {
-  //   return pipe(
-  //     () => st,
-  //     st =>
-  //       GameStateHelper.addNotification(st, 'end', {
-  //         reason: 'game-over',
-  //         score: st.scene.level.score,
-  //       }),
-  //     st => GameStateHelper.updateLevel(st, level => ({...level, ended: true})),
-  //     st => Res.ok(st)
-  //   )();
-  // }
 
   return state;
 };
