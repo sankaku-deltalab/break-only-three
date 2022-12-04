@@ -122,7 +122,8 @@ const endGameIfCan = (
 
   if (st.scene.level.ended) return state;
 
-  if (st.time.engineTimeMs > 10000) {
+  const abortTime = 60 * 1000;
+  if (st.time.engineTimeMs > abortTime) {
     return pipe(
       () => st,
       st =>
