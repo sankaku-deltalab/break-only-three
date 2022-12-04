@@ -52,7 +52,8 @@ export class DefaultBallBeh implements ActressBehavior<Stg, BT, MT> {
     });
     const normal = posForArea;
     const oldVelocity = st.body.movement.velocity;
-    const newVelocity = Vec2dTrait.isZero(normal)
+    const canReflect = Vec2dTrait.dot(oldVelocity, normal) > 0;
+    const newVelocity = !canReflect
       ? oldVelocity
       : Vec2dTrait.reflect(oldVelocity, normal);
     const delta = Vec2dTrait.mlt(
