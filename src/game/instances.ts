@@ -5,6 +5,7 @@ import {DefaultPaddleBeh} from './actress-behaviors/default-paddle';
 import {DefaultWallBeh} from './actress-behaviors/default-wall';
 import {Director} from './director';
 import {AllBlocksAreBrokenEv} from './event-appliers/all-blocks-are-broken-ev';
+import {AnnihilatedStateWasFinishedEv} from './event-appliers/annihilated-state-was-finished';
 import {BallHitToBlockEv} from './event-appliers/ball-hit-to-block-ev';
 import {BallHitToPaddleEv} from './event-appliers/ball-hit-to-paddle-ev';
 import {BallWasFallenEv} from './event-appliers/ball-was-fallen-ev';
@@ -31,5 +32,6 @@ export const tryStgInstances: GameInstances<TryStgSetting> = {
     allBlocksAreBroken: new AllBlocksAreBrokenEv(),
     ballWasFallen: new BallWasFallenEv(),
     fallenStateWasFinished: new FallenStateWasFinishedEv(),
+    annihilatedStateWasFinished: new AnnihilatedStateWasFinishedEv(),
   },
 };

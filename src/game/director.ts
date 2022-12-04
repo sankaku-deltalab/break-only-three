@@ -124,11 +124,25 @@ export class Director implements DirectorBehavior<Stg> {
       blocks => Object.entries(blocks),
       blocks => blocks.length === 0
     )();
-    const allBlocksAreBrokenEvents = !thereIsNoBlocks
+    const allBlocksAreBrokenEvents = !(
+      thereIsNoBlocks &&
+      GameStateHelper.getLevel(state).automaton.type === 'released'
+    )
       ? []
       : [
           EventTrait.createEvent<Stg, 'allBlocksAreBroken'>(
             'allBlocksAreBroken',
+            {}
+          ),
+        ];
+
+    const annihilatedStateWasFinished =
+      BoLevelTrait.annihilatedStateWasFinished(state, {});
+    const annihilatedStateWasFinishedEvents = !annihilatedStateWasFinished
+      ? []
+      : [
+          EventTrait.createEvent<Stg, 'annihilatedStateWasFinished'>(
+            'annihilatedStateWasFinished',
             {}
           ),
         ];
@@ -139,6 +153,7 @@ export class Director implements DirectorBehavior<Stg> {
       ...ballFallenEvents,
       ...fallenStateWasFinishedEvents,
       ...allBlocksAreBrokenEvents,
+      ...annihilatedStateWasFinishedEvents,
     ];
   }
 
@@ -146,6 +161,7 @@ export class Director implements DirectorBehavior<Stg> {
     const stateType = GameStateHelper.getLevel(state).automaton.type;
     if (stateType === 'finished') return {base: 0.0};
     if (stateType === 'fallen') return {base: 0.125};
+    if (stateType === 'annihilated') return {base: 0.125};
 
     return {base: 1.0};
   }

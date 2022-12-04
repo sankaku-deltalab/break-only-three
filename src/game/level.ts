@@ -7,7 +7,7 @@ export type StateType =
   | {type: 'launching'}
   | {type: 'released'}
   | {type: 'fallen'; endTime: number}
-  | {type: 'annihilated'}
+  | {type: 'annihilated'; endTime: number}
   | {type: 'finished'};
 
 export type BoLevelState = {
@@ -31,6 +31,19 @@ export class BoLevelTrait {
   ): GameState<Stg> {
     const newLvState: StateType = {
       type: 'fallen',
+      endTime: state.time.engineTimeMs + args.durationMs,
+    };
+    return GameStateHelper.updateLevel(state, lv =>
+      Im.replace(lv, 'automaton', () => newLvState)
+    );
+  }
+
+  static changeToAnnihilated(
+    state: GameState<Stg>,
+    args: {durationMs: number}
+  ): GameState<Stg> {
+    const newLvState: StateType = {
+      type: 'annihilated',
       endTime: state.time.engineTimeMs + args.durationMs,
     };
     return GameStateHelper.updateLevel(state, lv =>
@@ -63,6 +76,14 @@ export class BoLevelTrait {
     const time = state.time.engineTimeMs;
 
     if (lv.automaton.type !== 'fallen') return false;
+    return time > lv.automaton.endTime;
+  }
+
+  static annihilatedStateWasFinished(state: GameState<Stg>, args: {}): boolean {
+    const lv = GameStateHelper.getLevel(state);
+    const time = state.time.engineTimeMs;
+
+    if (lv.automaton.type !== 'annihilated') return false;
     return time > lv.automaton.endTime;
   }
 }
