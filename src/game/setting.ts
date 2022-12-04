@@ -2,6 +2,7 @@ import {AaRect2d, BodyId, Setting, Vec2d} from 'curtain-call3';
 import {DefaultPaddleState} from './actress-behaviors/default-paddle';
 import {BallMovement} from './components/ball-movement';
 import {Health} from './components/health';
+import {LineEffect} from './components/line-effect';
 import {PaddleStatus} from './components/paddle-status';
 import {Pos} from './components/pos';
 import {BoLevelState} from './level';
@@ -19,12 +20,14 @@ export type TryStgSetting = StrictAs<
       ball: {pos: Pos; movement: BallMovement; diam: number};
       block: {pos: Pos; size: Vec2d};
       wall: {shape: AaRect2d}; // unused
+      effectBody: {};
     };
     minds: {
       defaultPaddle: DefaultPaddleState;
       defaultWall: {}; // unused
       defaultBall: {};
       defaultBlock: {};
+      linesEffect: {effects: LineEffect[]};
     };
     events: {
       nop: {};
