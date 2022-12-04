@@ -22,6 +22,7 @@ import {gameArea, gameAreaRect, unit} from '../constants';
 import {TryStgSetting} from '../setting';
 import {PosTrait} from '../components/pos';
 import {PaddleStatusTrait} from '../components/paddle-status';
+import {BoLevelTrait} from '../level';
 
 type Stg = TryStgSetting;
 
@@ -72,7 +73,7 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
     }
   ): ActressState<Stg, BT, MT> {
     const movableArea = AaRect2dTrait.reduceArea(
-      gameAreaRect,
+      BoLevelTrait.getSurvivableArea(args.gameState, {}),
       st.body.status.size
     );
     const delta = InputHelper.deltaWhileDown(args.gameState);
