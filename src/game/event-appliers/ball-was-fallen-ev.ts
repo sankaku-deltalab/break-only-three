@@ -87,7 +87,7 @@ const createLineEffects = (origin: Vec2d): LineEffect[] => {
 
       key: `line${i}`,
       zIndex: 0,
-      color: 0xff5555,
+      color: 0x1e90ff,
       thickness: unit / 8,
     });
   });
