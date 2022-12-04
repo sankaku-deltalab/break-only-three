@@ -1,4 +1,13 @@
-import {GameState, GameStateHelper, Im} from 'curtain-call3';
+import {
+  AaRect2d,
+  AaRect2dTrait,
+  Enum,
+  GameState,
+  GameStateHelper,
+  Im,
+  Vec2d,
+} from 'curtain-call3';
+import {gameArea, gameAreaRect, unit} from './constants';
 import {TryStgSetting} from './setting';
 
 type Stg = TryStgSetting;
@@ -13,6 +22,7 @@ export type StateType =
 export type BoLevelState = {
   score: number;
   ended: boolean;
+  wholeVelocity: Vec2d;
   automaton: StateType;
 };
 
@@ -21,6 +31,7 @@ export class BoLevelTrait {
     return {
       score: 0,
       ended: false,
+      wholeVelocity: {x: -unit / 2000, y: unit / 2000},
       automaton: {type: 'launching'},
     };
   }
@@ -85,5 +96,14 @@ export class BoLevelTrait {
 
     if (lv.automaton.type !== 'annihilated') return false;
     return time > lv.automaton.endTime;
+  }
+
+  static getSurvivableArea(state: GameState<Stg>, args: {}): AaRect2d {
+    const areas = Object.values(
+      GameStateHelper.getBodiesOf(state, 'survivableArea')
+    );
+    return Enum.reduce(areas, gameAreaRect, (areaBody, wholeArea: AaRect2d) =>
+      AaRect2dTrait.intersection(areaBody.area, wholeArea)
+    );
   }
 }

@@ -18,6 +18,7 @@ import {TryStgSetting} from '../setting';
 import {PosTrait} from '../components/pos';
 import {pipe} from 'rambda';
 import {BallMovementTrait} from '../components/ball-movement';
+import {BoLevelTrait} from '../level';
 
 type Stg = TryStgSetting;
 
@@ -45,8 +46,9 @@ export class DefaultBallBeh implements ActressBehavior<Stg, BT, MT> {
       gameState: VisibleGameState<Stg>;
     }
   ): ActressState<Stg, BT, MT> {
+    const movableArea = BoLevelTrait.getSurvivableArea(args.gameState, {});
     const posForArea = AaRect2dTrait.calcPointPosition(st.body.pos.pos, {
-      area: gameAreaRect,
+      area: movableArea,
     });
     const normal = posForArea;
     const oldVelocity = st.body.movement.velocity;

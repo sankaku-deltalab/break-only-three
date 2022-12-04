@@ -19,12 +19,14 @@ export type TryStgSetting = StrictAs<
       paddle: {pos: Pos; status: PaddleStatus};
       ball: {pos: Pos; movement: BallMovement; diam: number};
       block: {pos: Pos; size: Vec2d};
+      survivableArea: {area: AaRect2d; freezeEndTimeMs: number};
       effectBody: {};
     };
     minds: {
       defaultPaddle: DefaultPaddleState;
       defaultBall: {};
       defaultBlock: {};
+      movingSurvivableArea: {};
       linesEffect: {effects: LineEffect[]};
     };
     events: {

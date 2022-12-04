@@ -32,6 +32,7 @@ import {BallMovementTrait} from '../../game/components/ball-movement';
 import {PaddleStatusTrait} from '../../game/components/paddle-status';
 import {BoLevelTrait} from '../../game/level';
 import {DefaultPaddleTrait} from '../../game/actress-behaviors/default-paddle';
+import {MovingSurvivableAreaTrait} from '../../game/actress-behaviors/moving-survibable-area';
 
 type Stg = TryStgSetting;
 
@@ -61,6 +62,7 @@ export type GameSliceState = {
 
 const generateInitialGameState = (): GameState<Stg> => {
   const paddle = DefaultPaddleTrait.createActInit();
+  const survivableArea = MovingSurvivableAreaTrait.createActInit();
 
   const blocks = pipe(
     () => Im.range(0, 3),
@@ -79,7 +81,8 @@ const generateInitialGameState = (): GameState<Stg> => {
       ),
     v => v
   )();
-  const acts = [paddle, ...blocks];
+
+  const acts = [paddle, survivableArea, ...blocks];
 
   return pipe(
     (): StateInitializer<Stg> => ({

@@ -3,6 +3,7 @@ import {DefaultBallBeh} from './actress-behaviors/default-ball';
 import {DefaultBlockBeh} from './actress-behaviors/default-block';
 import {DefaultPaddleBeh} from './actress-behaviors/default-paddle';
 import {LinesEffectBeh} from './actress-behaviors/lines-effect';
+import {MovingSurvivableArea} from './actress-behaviors/moving-survibable-area';
 import {Director} from './director';
 import {AllBlocksAreBrokenEv} from './event-appliers/all-blocks-are-broken-ev';
 import {AnnihilatedStateWasFinishedEv} from './event-appliers/annihilated-state-was-finished';
@@ -22,6 +23,7 @@ export const tryStgInstances: GameInstances<TryStgSetting> = {
     defaultPaddle: new DefaultPaddleBeh(),
     defaultBall: new DefaultBallBeh(),
     defaultBlock: new DefaultBlockBeh(),
+    movingSurvivableArea: new MovingSurvivableArea(),
     linesEffect: new LinesEffectBeh(),
   },
   eventManipulators: {
