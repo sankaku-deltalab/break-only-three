@@ -1,4 +1,10 @@
-import {EventApplier, GameState, EventPayload} from 'curtain-call3';
+import {
+  EventApplier,
+  GameState,
+  EventPayload,
+  Im,
+  GameStateHelper,
+} from 'curtain-call3';
 import {TryStgSetting} from '../setting';
 
 type Stg = TryStgSetting;
@@ -9,8 +15,16 @@ type EvType = typeof evType;
 export class AllBlocksAreBrokenEv implements EventApplier<Stg, EvType> {
   applyEvent(
     state: GameState<Stg>,
-    payload: EventPayload<Stg, EvType>
+    {}: EventPayload<Stg, EvType>
   ): GameState<Stg> {
-    return state;
+    return Im.pipe(
+      () => state,
+      st =>
+        GameStateHelper.addNotification(st, 'end', {
+          reason: 'clear',
+          score: st.scene.level.score,
+        }),
+      st => GameStateHelper.updateLevel(st, level => ({...level, ended: true}))
+    )();
   }
 }
