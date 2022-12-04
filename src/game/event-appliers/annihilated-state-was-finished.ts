@@ -17,7 +17,7 @@ type EvType = typeof evType;
 export class AnnihilatedStateWasFinishedEv
   implements EventManipulator<Stg, EvType>
 {
-  createEventsAtUpdate(
+  generateEventsAtUpdate(
     state: GameState<Stg>,
     args: {
       overlaps: Overlaps;

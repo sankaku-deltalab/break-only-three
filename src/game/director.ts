@@ -46,7 +46,7 @@ export class Director implements DirectorBehavior<Stg> {
     return st.val;
   }
 
-  generateEvents(
+  generateEventsAtUpdate(
     state: GameState<Stg>,
     other: {
       overlaps: Overlaps;

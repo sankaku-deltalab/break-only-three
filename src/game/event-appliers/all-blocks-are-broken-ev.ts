@@ -15,7 +15,7 @@ const evType = 'allBlocksAreBroken';
 type EvType = typeof evType;
 
 export class AllBlocksAreBrokenEv implements EventManipulator<Stg, EvType> {
-  createEventsAtUpdate(
+  generateEventsAtUpdate(
     state: GameState<Stg>,
     args: {
       overlaps: Overlaps;

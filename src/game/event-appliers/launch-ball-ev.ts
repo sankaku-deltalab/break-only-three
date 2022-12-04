@@ -19,7 +19,7 @@ const evType = 'launchBall';
 type EvType = typeof evType;
 
 export class LaunchBallEv implements EventManipulator<Stg, EvType> {
-  createEventsAtUpdate(
+  generateEventsAtUpdate(
     state: GameState<Stg>,
     args: {
       overlaps: Overlaps;

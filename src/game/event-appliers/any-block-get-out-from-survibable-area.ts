@@ -24,7 +24,7 @@ type EvType = typeof evType;
 export class AnyBlockGetOutFromSurvivableArea
   implements EventManipulator<Stg, EvType>
 {
-  createEventsAtUpdate(
+  generateEventsAtUpdate(
     state: GameState<Stg>,
     args: {
       overlaps: Overlaps;
