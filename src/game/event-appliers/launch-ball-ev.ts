@@ -1,10 +1,11 @@
 import {
-  EventApplier,
   GameState,
   EventPayload,
   GameStateHelper,
   ActressHelper,
   Im,
+  EventManipulator,
+  Overlaps,
 } from 'curtain-call3';
 import {BallMovementTrait} from '../components/ball-movement';
 import {PosTrait} from '../components/pos';
@@ -17,7 +18,16 @@ type Stg = TryStgSetting;
 const evType = 'launchBall';
 type EvType = typeof evType;
 
-export class LaunchBallEv implements EventApplier<Stg, EvType> {
+export class LaunchBallEv implements EventManipulator<Stg, EvType> {
+  createEvents(
+    state: GameState<Stg>,
+    args: {
+      overlaps: Overlaps;
+    }
+  ): EventPayload<Stg, EvType>[] {
+    return [];
+  }
+
   applyEvent(
     state: GameState<Stg>,
     {ballPos, velocity}: EventPayload<Stg, EvType>

@@ -108,7 +108,6 @@ export class DefaultBallBeh implements ActressBehavior<Stg, BT, MT> {
     const shapes = [CollisionHelper.createAaRectShape(ballArea)];
     return {
       shapes,
-      mode: collisionModes.any,
       excess: false,
     };
   }

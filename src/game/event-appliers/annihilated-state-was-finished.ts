@@ -1,9 +1,10 @@
 import {
-  EventApplier,
   GameState,
   EventPayload,
   GameStateHelper,
   Im,
+  EventManipulator,
+  Overlaps,
 } from 'curtain-call3';
 import {BoLevelTrait} from '../level';
 import {TryStgSetting} from '../setting';
@@ -14,8 +15,17 @@ const evType = 'annihilatedStateWasFinished';
 type EvType = typeof evType;
 
 export class AnnihilatedStateWasFinishedEv
-  implements EventApplier<Stg, EvType>
+  implements EventManipulator<Stg, EvType>
 {
+  createEvents(
+    state: GameState<Stg>,
+    args: {
+      overlaps: Overlaps;
+    }
+  ): EventPayload<Stg, EvType>[] {
+    return [];
+  }
+
   applyEvent(
     state: GameState<Stg>,
     {}: EventPayload<Stg, EvType>

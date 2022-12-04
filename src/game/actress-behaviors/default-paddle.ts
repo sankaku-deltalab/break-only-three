@@ -200,7 +200,6 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
     const shapes = [CollisionHelper.createAaRectShape(paddleArea)];
     return {
       shapes,
-      mode: collisionModes.any,
       excess: false,
     };
   }

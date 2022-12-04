@@ -1,4 +1,9 @@
-import {EventApplier, GameState, EventPayload} from 'curtain-call3';
+import {
+  GameState,
+  EventPayload,
+  EventManipulator,
+  Overlaps,
+} from 'curtain-call3';
 import {TryStgSetting} from '../setting';
 
 type Stg = TryStgSetting;
@@ -6,7 +11,16 @@ type Stg = TryStgSetting;
 const evType = 'nop';
 type EvType = typeof evType;
 
-export class NopEv implements EventApplier<Stg, EvType> {
+export class NopEv implements EventManipulator<Stg, EvType> {
+  createEvents(
+    state: GameState<Stg>,
+    args: {
+      overlaps: Overlaps;
+    }
+  ): EventPayload<Stg, EvType>[] {
+    return [];
+  }
+
   applyEvent(
     state: GameState<Stg>,
     payload: EventPayload<Stg, EvType>

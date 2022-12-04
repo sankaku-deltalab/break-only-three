@@ -84,7 +84,6 @@ export class DefaultBlockBeh implements ActressBehavior<Stg, BT, MT> {
     const shapes = [CollisionHelper.createAaRectShape(blockArea)];
     return {
       shapes,
-      mode: collisionModes.any,
       excess: false,
     };
   }

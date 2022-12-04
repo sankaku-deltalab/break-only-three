@@ -63,7 +63,6 @@ export class DefaultWallBeh implements ActressBehavior<Stg, BT, MT> {
     const shapes = [CollisionHelper.createAaRectShape(st.body.shape)];
     return {
       shapes,
-      mode: collisionModes.any,
       excess: false,
     };
   }

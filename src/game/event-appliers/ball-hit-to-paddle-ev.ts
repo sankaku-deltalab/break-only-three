@@ -1,10 +1,11 @@
 import {
-  EventApplier,
   GameState,
   EventPayload,
   GameStateHelper,
   Im,
   AaRect2dTrait,
+  EventManipulator,
+  Overlaps,
 } from 'curtain-call3';
 import {pipe} from 'rambda';
 import {BallMovementTrait} from '../components/ball-movement';
@@ -16,7 +17,16 @@ type Stg = TryStgSetting;
 const evType = 'ballHitToPaddle';
 type EvType = typeof evType;
 
-export class BallHitToPaddleEv implements EventApplier<Stg, EvType> {
+export class BallHitToPaddleEv implements EventManipulator<Stg, EvType> {
+  createEvents(
+    state: GameState<Stg>,
+    args: {
+      overlaps: Overlaps;
+    }
+  ): EventPayload<Stg, EvType>[] {
+    return [];
+  }
+
   applyEvent(
     state: GameState<Stg>,
     {ballId, paddleId}: EventPayload<Stg, EvType>
