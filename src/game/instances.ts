@@ -7,6 +7,7 @@ import {MovingSurvivableArea} from './actress-behaviors/moving-survibable-area';
 import {Director} from './director';
 import {AllBlocksAreBrokenEv} from './event-appliers/all-blocks-are-broken-ev';
 import {AnnihilatedStateWasFinishedEv} from './event-appliers/annihilated-state-was-finished';
+import {AnyBlockGetOutFromSurvivableArea} from './event-appliers/any-block-get-out-from-survibable-area';
 import {BallHitToBlockEv} from './event-appliers/ball-hit-to-block-ev';
 import {BallHitToPaddleEv} from './event-appliers/ball-hit-to-paddle-ev';
 import {BallWasFallenEv} from './event-appliers/ball-was-fallen-ev';
@@ -35,5 +36,6 @@ export const tryStgInstances: GameInstances<TryStgSetting> = {
     ballWasFallen: new BallWasFallenEv(),
     fallenStateWasFinished: new FallenStateWasFinishedEv(),
     annihilatedStateWasFinished: new AnnihilatedStateWasFinishedEv(),
+    anyBlockGetOutFromSurvivableArea: new AnyBlockGetOutFromSurvivableArea(),
   },
 };

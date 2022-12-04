@@ -38,6 +38,7 @@ export type TryStgSetting = StrictAs<
       ballWasFallen: {ballId: BodyId};
       annihilatedStateWasFinished: {};
       fallenStateWasFinished: {};
+      anyBlockGetOutFromSurvivableArea: {blockIds: BodyId[]};
     };
     representation: {score: number; ended: boolean};
     notifications: {
