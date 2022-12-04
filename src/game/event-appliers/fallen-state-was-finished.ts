@@ -15,7 +15,7 @@ const evType = 'fallenStateWasFinished';
 type EvType = typeof evType;
 
 export class FallenStateWasFinishedEv implements EventManipulator<Stg, EvType> {
-  createEvents(
+  createEventsAtUpdate(
     state: GameState<Stg>,
     args: {
       overlaps: Overlaps;

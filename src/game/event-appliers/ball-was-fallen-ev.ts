@@ -17,7 +17,7 @@ const evType = 'ballWasFallen';
 type EvType = typeof evType;
 
 export class BallWasFallenEv implements EventManipulator<Stg, EvType> {
-  createEvents(
+  createEventsAtUpdate(
     state: GameState<Stg>,
     args: {
       overlaps: Overlaps;

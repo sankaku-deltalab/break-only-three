@@ -12,7 +12,7 @@ const evType = 'nop';
 type EvType = typeof evType;
 
 export class NopEv implements EventManipulator<Stg, EvType> {
-  createEvents(
+  createEventsAtUpdate(
     state: GameState<Stg>,
     args: {
       overlaps: Overlaps;
