@@ -19,7 +19,7 @@ import {
   VisibleGameState,
 } from 'curtain-call3';
 import {gameArea, gameAreaRect, unit} from '../constants';
-import {collisionModes, TryStgSetting} from '../setting';
+import {TryStgSetting} from '../setting';
 import {PosTrait} from '../components/pos';
 import {PaddleStatusTrait} from '../components/paddle-status';
 

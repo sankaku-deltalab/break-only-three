@@ -45,15 +45,3 @@ export type TryStgSetting = StrictAs<
     };
   }
 >;
-
-const collisionModeRaws = {
-  any: 0b00000001,
-};
-
-const collisionMasks = {
-  any: 0b00000001,
-};
-
-export const collisionModes = {
-  any: {mode: collisionModeRaws.any, mask: collisionMasks.any},
-};
