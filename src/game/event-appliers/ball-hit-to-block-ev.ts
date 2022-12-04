@@ -86,6 +86,14 @@ export class BallHitToBlockEv implements EventManipulator<Stg, EvType> {
           [ballId]: newBallBody,
           [blockId]: newBlockBody,
         }),
+      st =>
+        GameStateHelper.updateLevel(st, lv =>
+          Im.replace(
+            lv,
+            'wholeMovementFreezeEndTimeMs',
+            () => st.time.gameTimeMs + 100
+          )
+        ),
       st => GameStateHelper.addActress(st, effectInit).state
     )();
   }
