@@ -3,11 +3,10 @@ import {
   EventPayload,
   GameStateHelper,
   Im,
-  AaRect2dTrait,
   EventManipulator,
   Overlaps,
+  RecM2MTrait,
 } from 'curtain-call3';
-import {pipe} from 'rambda';
 import {BallMovementTrait} from '../components/ball-movement';
 import {PaddleStatusTrait} from '../components/paddle-status';
 import {TryStgSetting} from '../setting';
@@ -24,7 +23,22 @@ export class BallHitToPaddleEv implements EventManipulator<Stg, EvType> {
       overlaps: Overlaps;
     }
   ): EventPayload<Stg, EvType>[] {
-    return [];
+    return Im.pipe(
+      () => args.overlaps,
+      ov =>
+        GameStateHelper.filterOverlaps(ov, {
+          state: state,
+          from: 'ball',
+          to: 'paddle',
+        }),
+      ov => RecM2MTrait.removeNonDestinations(ov),
+      ov => RecM2MTrait.toPairs(ov),
+      ov =>
+        ov.map(([ballId, paddleId]) => ({
+          ballId,
+          paddleId,
+        }))
+    )();
   }
 
   applyEvent(
@@ -47,7 +61,7 @@ export class BallHitToPaddleEv implements EventManipulator<Stg, EvType> {
       return BallMovementTrait.reflectByNormal(mov, {normal: reflectNormal});
     });
 
-    return pipe(
+    return Im.pipe(
       () => state,
       st => GameStateHelper.replaceBodies(st, {[ballId]: newBallBody})
     )();

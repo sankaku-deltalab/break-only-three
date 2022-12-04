@@ -23,14 +23,22 @@ export class AnnihilatedStateWasFinishedEv
       overlaps: Overlaps;
     }
   ): EventPayload<Stg, EvType>[] {
-    return [];
+    if (GameStateHelper.getLevel(state).automaton.type !== 'annihilated')
+      return [];
+
+    const anniStateWasFinished = BoLevelTrait.annihilatedStateWasFinished(
+      state,
+      {}
+    );
+    if (!anniStateWasFinished) return [];
+
+    return [{}];
   }
 
   applyEvent(
     state: GameState<Stg>,
     {}: EventPayload<Stg, EvType>
   ): GameState<Stg> {
-    console.log('AnnihilatedStateWasFinishedEv');
     return Im.pipe(
       () => state,
       st =>

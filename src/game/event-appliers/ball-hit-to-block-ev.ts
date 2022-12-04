@@ -6,8 +6,8 @@ import {
   AaRect2dTrait,
   EventManipulator,
   Overlaps,
+  RecM2MTrait,
 } from 'curtain-call3';
-import {pipe} from 'rambda';
 import {BallMovementTrait} from '../components/ball-movement';
 import {TryStgSetting} from '../setting';
 
@@ -23,7 +23,21 @@ export class BallHitToBlockEv implements EventManipulator<Stg, EvType> {
       overlaps: Overlaps;
     }
   ): EventPayload<Stg, EvType>[] {
-    return [];
+    return Im.pipe(
+      () => args.overlaps,
+      ov =>
+        GameStateHelper.filterOverlaps(ov, {
+          state: state,
+          from: 'ball',
+          to: 'block',
+        }),
+      ov => RecM2MTrait.toPairs(ov),
+      ov =>
+        ov.map(([ballId, blockId]) => ({
+          ballId,
+          blockId,
+        }))
+    )();
   }
 
   applyEvent(
@@ -50,7 +64,7 @@ export class BallHitToBlockEv implements EventManipulator<Stg, EvType> {
       return {...meta, del: true};
     });
 
-    return pipe(
+    return Im.pipe(
       () => state,
       st =>
         GameStateHelper.replaceBodies(st, {

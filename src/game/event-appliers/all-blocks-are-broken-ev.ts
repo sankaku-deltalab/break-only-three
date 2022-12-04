@@ -21,21 +21,27 @@ export class AllBlocksAreBrokenEv implements EventManipulator<Stg, EvType> {
       overlaps: Overlaps;
     }
   ): EventPayload<Stg, EvType>[] {
-    return [];
+    if (GameStateHelper.getLevel(state).automaton.type !== 'released')
+      return [];
+
+    const thereIsNoBlocks = Im.pipe(
+      () => state,
+      st => GameStateHelper.getBodiesOf(st, 'block'),
+      blocks => Object.entries(blocks),
+      blocks => blocks.length === 0
+    )();
+    if (!thereIsNoBlocks) return [];
+
+    return [{}];
   }
 
   applyEvent(
     state: GameState<Stg>,
     {}: EventPayload<Stg, EvType>
   ): GameState<Stg> {
-    console.log('AllBlocksAreBrokenEv');
     return Im.pipe(
       () => state,
       st => BoLevelTrait.changeToAnnihilated(st, {durationMs: 1000})
-    )();
-    return Im.pipe(
-      () => state,
-      st => GameStateHelper.updateLevel(st, level => ({...level, ended: true}))
     )();
   }
 }

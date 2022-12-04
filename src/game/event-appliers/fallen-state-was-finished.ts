@@ -21,7 +21,13 @@ export class FallenStateWasFinishedEv implements EventManipulator<Stg, EvType> {
       overlaps: Overlaps;
     }
   ): EventPayload<Stg, EvType>[] {
-    return [];
+    const fallenStateWasFinished = BoLevelTrait.fallenStateWasFinished(
+      state,
+      {}
+    );
+    if (!fallenStateWasFinished) return [];
+
+    return [{}];
   }
 
   applyEvent(
