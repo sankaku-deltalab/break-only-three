@@ -62,13 +62,20 @@ export type GameSliceState = {
 };
 
 const generateInitialGameState = (): GameState<Stg> => {
+  const randIn = (start: number, stop: number): number => {
+    const r = Math.random();
+    return stop * r + start * (1 - r);
+  };
+  const velocityDir = randIn(Math.PI * 0.25, Math.PI * 0.25 * 3);
+  const speed = randIn(unit / 2000, unit / 500);
+  const velocity = Vec2dTrait.fromRadians(velocityDir, speed);
   return WholeGameProcessing.initGameState({
     scoreMlt: 1,
     blockPositions: Enum.map(Im.range(0, 3), i => ({
       x: (i * 5 * unit) / 6,
       y: -unit,
     })),
-    wholeVelocity: Vec2dTrait.mlt({x: -unit / 2000, y: unit / 2000}, 2.0),
+    wholeVelocity: velocity,
   });
 };
 

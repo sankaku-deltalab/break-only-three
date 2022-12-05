@@ -86,16 +86,18 @@ const processWholeMovement = (
 
   let st = state.val;
 
-  if (GameStateHelper.getLevel(st).automaton.type !== 'released')
-    return Res.ok(st);
-
   if (st.time.gameTimeMs < st.scene.level.wholeMovementFreezeEndTimeMs)
     return Res.ok(st);
 
-  const delta = Vec2dTrait.mlt(
+  const isReleasing =
+    GameStateHelper.getLevel(st).automaton.type === 'released';
+  const velocityMlt = isReleasing ? 1 : 0.125;
+  const velocity = Vec2dTrait.mlt(
     GameStateHelper.getLevel(st).wholeVelocity,
-    st.time.lastDeltaMs
+    velocityMlt
   );
+
+  const delta = Vec2dTrait.mlt(velocity, st.time.lastDeltaMs);
 
   st = GameStateHelper.updateBodies(st, body => {
     if (ActressHelper.bodyIsInType(body, 'block')) {
