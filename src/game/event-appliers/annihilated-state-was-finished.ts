@@ -5,9 +5,13 @@ import {
   Im,
   EventManipulator,
   Overlaps,
+  Vec2dTrait,
+  Enum,
 } from 'curtain-call3';
+import {unit} from '../constants';
 import {BoLevelTrait} from '../level';
 import {TryStgSetting} from '../setting';
+import {WholeGameProcessing} from '../whole-processing';
 
 type Stg = TryStgSetting;
 
@@ -39,15 +43,17 @@ export class AnnihilatedStateWasFinishedEv
     state: GameState<Stg>,
     {}: EventPayload<Stg, EvType>
   ): GameState<Stg> {
-    return Im.pipe(
-      () => state,
-      st =>
-        GameStateHelper.addNotification(st, 'end', {
-          reason: 'clear',
-          score: st.scene.level.score,
-        }),
-      st => BoLevelTrait.changeToFinishedState(st, {}),
-      st => GameStateHelper.updateLevel(st, level => ({...level, ended: true}))
-    )();
+    const oldScore = GameStateHelper.getLevel(state).score;
+    return WholeGameProcessing.generateInitialGameState({score: oldScore + 1});
+    // return Im.pipe(
+    //   () => state,
+    //   st =>
+    //     GameStateHelper.addNotification(st, 'end', {
+    //       reason: 'clear',
+    //       score: st.scene.level.score,
+    //     }),
+    //   st => BoLevelTrait.changeToFinishedState(st, {}),
+    //   st => GameStateHelper.updateLevel(st, level => ({...level, ended: true}))
+    // )();
   }
 }

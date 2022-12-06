@@ -29,9 +29,12 @@ export type BoLevelState = {
 };
 
 export class BoLevelTrait {
-  static createInitial(opt: {wholeVelocity: Vec2d}): BoLevelState {
+  static createInitial(opt: {
+    score: number;
+    wholeVelocity: Vec2d;
+  }): BoLevelState {
     return {
-      score: 0,
+      score: opt.score,
       ended: false,
       wholeVelocity: opt.wholeVelocity,
       wholeMovementFreezeEndTimeMs: -1,
