@@ -12,6 +12,7 @@ import {
   selectResult,
   returnToMenuFromResult,
   selectRepresentation,
+  restartGame,
 } from '../features/reactpixi/gameSlice';
 import {RecSetTrait} from 'curtain-call3';
 
@@ -26,7 +27,7 @@ const IndexPage: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Redux Toolkit</title>
+        <title>Break Only Three</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Menu />
@@ -47,14 +48,20 @@ const Menu = () => {
   }
 
   return (
-    <div>
-      <div>Try STG</div>
-      <button
-        onKeyDown={() => {}}
-        onClick={() => dispatch(startGameFromMenu({}))}
-      >
-        Start game
-      </button>
+    <div
+      onKeyDown={() => {}}
+      onClick={() => dispatch(startGameFromMenu({}))}
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+      }}
+    >
+      <div>
+        <h1>Break only three</h1>
+        <div>Tap to START</div>
+      </div>
     </div>
   );
 };
@@ -113,23 +120,31 @@ const GameResult = () => {
 
   return (
     <div
+      onKeyDown={() => {}}
+      onClick={() => dispatch(restartGame({}))}
       style={{
         position: 'fixed',
         width: '100vw',
         height: '100vh',
         background: 'rgba(0, 0, 0, 0.9)',
         color: 'rgb(255, 255, 255)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
-      <div>Result</div>
-      <div>{result.endReason}</div>
-      <div>score: {result.score}</div>
-      <button
-        onKeyDown={() => {}}
-        onClick={() => dispatch(returnToMenuFromResult({}))}
-      >
-        Return to menu
-      </button>
+      <div>
+        <h1>score: {result.score}</h1>
+        <div>Tap to RESTART</div>
+        <button
+          onKeyDown={() => {}}
+          onClick={e => {
+            e.stopPropagation();
+          }}
+        >
+          Share with Twitter
+        </button>
+      </div>
     </div>
   );
 };

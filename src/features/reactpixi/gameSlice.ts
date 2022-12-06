@@ -126,6 +126,20 @@ export const gameSlice = createSlice({
       }
       editableState.mode = 'menu';
     },
+    restartGame: (editableState, action: PayloadAction<{}>) => {
+      if (editableState.mode !== 'game-result') {
+        return;
+      }
+      editableState.mode = 'game';
+      editableState.game = {
+        gameProgress: {mode: 'active'},
+        game: generateInitialGameState(),
+      };
+      editableState.pointer = {
+        canvasPos: vec2d.zero(),
+        down: false,
+      };
+    },
     pauseGame: (editableState, action: PayloadAction<{}>) => {
       const state = original(editableState) as GameSliceState;
       const progress = GameProgressController.pause(state.game.gameProgress);
@@ -192,6 +206,7 @@ export const {
   resetAllStageState,
   startGameFromMenu,
   returnToMenuFromResult,
+  restartGame,
 } = gameSlice.actions;
 
 const calcRenderingState = (state: GameSliceState): RenderingState => {
