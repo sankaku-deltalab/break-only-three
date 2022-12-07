@@ -136,14 +136,14 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
           }}
         />
         {/* <CameraGraphicElement area={renderingArea} /> */}
-        <Container mask={maskRef.current} position={[0, 0]}>
+        <ActuallyJustContainer mask={maskRef.current} position={[0, 0]}>
           {lineGraphics.map(line => (
             <LineGraphicElement key={line.key} line={line} />
           ))}
           {spriteGraphics.map(g => (
             <SpriteGraphicElement key={g.key} sprite={g} />
           ))}
-        </Container>
+        </ActuallyJustContainer>
       </Stage>
     </div>
   );
@@ -174,6 +174,9 @@ const LineGraphicElement = (props: {line: CanvasLineGraphic}) => {
     <Graphics key={props.line.key} zIndex={props.line.zIndex} draw={draw} />
   );
 };
+
+// react v18 and react-pixi v6.8.0 cause type error. And avoid it with this line.
+const ActuallyJustContainer: React.FC<Record<string, unknown>> = Container;
 
 const SpriteGraphicElement = (props: {sprite: CanvasSpriteGraphic}) => {
   const g = props.sprite;
