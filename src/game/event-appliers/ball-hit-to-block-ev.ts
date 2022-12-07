@@ -49,6 +49,9 @@ export class BallHitToBlockEv implements EventManipulator<Stg, EvType> {
     state: GameState<Stg>,
     {ballId, blockId}: EventPayload<Stg, EvType>
   ): GameState<Stg> {
+    if (GameStateHelper.getLevel(state).automaton.type !== 'released')
+      return state;
+
     const ball = GameStateHelper.getBody(state, ballId, 'ball');
     const block = GameStateHelper.getBody(state, blockId, 'block');
 
