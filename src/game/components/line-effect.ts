@@ -69,7 +69,7 @@ export class LineEffectTrait {
     const t = (line.elapsedTimeMs - line.activateDelayMs) / lifeTime;
     if (t < 0) return 0;
     if (t > 1) return line.thickness;
-    return line.thickness * t;
+    return line.thickness * easeOut(t);
   }
 
   static generateGraphics(line: LineEffect): LineGraphic[] {
