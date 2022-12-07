@@ -89,6 +89,16 @@ export class WholeGameProcessing {
       wholeVelocity: velocity,
     });
   }
+
+  static getZIndex() {
+    return {
+      deadlyEffect: 110,
+      ball: 100,
+      paddle: 90,
+      block: 80,
+      hitEffect: 70,
+    };
+  }
 }
 
 const randomPop = <T>(items: T[], count: number): T[] => {

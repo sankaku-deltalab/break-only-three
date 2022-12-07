@@ -123,7 +123,7 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
             g.endFill();
           }}
         />
-        <CameraGraphicElement area={renderingArea} />
+        {/* <CameraGraphicElement area={renderingArea} /> */}
         <Container mask={maskRef.current} position={[0, 0]}>
           {lineGraphics.map(line => (
             <LineGraphicElement key={line.key} line={line} />

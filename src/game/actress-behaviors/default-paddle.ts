@@ -23,6 +23,7 @@ import {TryStgSetting} from '../setting';
 import {PosTrait} from '../components/pos';
 import {PaddleStatusTrait} from '../components/paddle-status';
 import {BoLevelTrait} from '../level';
+import {WholeGameProcessing} from '../whole-processing';
 
 type Stg = TryStgSetting;
 
@@ -153,10 +154,8 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
       Vec2dTrait.zero(),
       st.body.status.size
     );
-    const nw = relArea.nw;
-    const se = relArea.se;
-    const ne = {x: relArea.nw.x, y: relArea.se.y};
-    const sw = {x: relArea.se.x, y: relArea.nw.y};
+    const {nw, se, ne, sw} = AaRect2dTrait.corners(relArea);
+    const zIndex = WholeGameProcessing.getZIndex().paddle;
     const paddleLine = LineGraphicTrait.create({
       key: 'main',
       pos: st.body.pos.pos,

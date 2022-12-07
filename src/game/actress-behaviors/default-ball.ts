@@ -19,6 +19,7 @@ import {PosTrait} from '../components/pos';
 import {pipe} from 'rambda';
 import {BallMovementTrait} from '../components/ball-movement';
 import {BoLevelTrait} from '../level';
+import {WholeGameProcessing} from '../whole-processing';
 
 type Stg = TryStgSetting;
 
@@ -82,10 +83,8 @@ export class DefaultBallBeh implements ActressBehavior<Stg, BT, MT> {
       Vec2dTrait.zero(),
       Vec2dTrait.mlt(Vec2dTrait.one(), st.body.diam)
     );
-    const nw = relArea.nw;
-    const se = relArea.se;
-    const ne = {x: relArea.nw.x, y: relArea.se.y};
-    const sw = {x: relArea.se.x, y: relArea.nw.y};
+    const {nw, se, ne, sw} = AaRect2dTrait.corners(relArea);
+    const zIndex = WholeGameProcessing.getZIndex().ball;
     const line = LineGraphicTrait.create({
       key: 'main',
       pos: st.body.pos.pos,
@@ -93,7 +92,7 @@ export class DefaultBallBeh implements ActressBehavior<Stg, BT, MT> {
       paths: [nw, ne, se, sw],
       thickness: 2,
       closed: true,
-      zIndex: 0,
+      zIndex,
     });
     return [line];
   }

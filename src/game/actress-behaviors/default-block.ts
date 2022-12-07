@@ -15,6 +15,7 @@ import {
 import {gameArea, gameAreaRect, unit} from '../constants';
 import {TryStgSetting} from '../setting';
 import {PosTrait} from '../components/pos';
+import {WholeGameProcessing} from '../whole-processing';
 
 type Stg = TryStgSetting;
 
@@ -55,10 +56,8 @@ export class DefaultBlockBeh implements ActressBehavior<Stg, BT, MT> {
       Vec2dTrait.zero(),
       st.body.size
     );
-    const nw = relArea.nw;
-    const se = relArea.se;
-    const ne = {x: relArea.nw.x, y: relArea.se.y};
-    const sw = {x: relArea.se.x, y: relArea.nw.y};
+    const {nw, se, ne, sw} = AaRect2dTrait.corners(relArea);
+    const zIndex = WholeGameProcessing.getZIndex().block;
     const line = LineGraphicTrait.create({
       key: 'main',
       pos: st.body.pos.pos,
@@ -66,7 +65,7 @@ export class DefaultBlockBeh implements ActressBehavior<Stg, BT, MT> {
       paths: [nw, ne, se, sw],
       thickness: 2,
       closed: true,
-      zIndex: 0,
+      zIndex,
     });
     return [line];
   }
