@@ -210,13 +210,16 @@ export const {
 } = gameSlice.actions;
 
 const calcRenderingState = (state: GameSliceState): RenderingState => {
+  const scale =
+    Math.min(
+      state.canvas.size.x / gameArea.x,
+      state.canvas.size.y / gameArea.y
+    ) * state.renderingConfig.scaling;
+  const renderingH = gameArea.y * scale;
+  const center = {x: state.canvas.size.x / 2, y: renderingH / 2};
   return {
-    center: Vec2dTrait.div(state.canvas.size, 2),
-    scale:
-      Math.min(
-        state.canvas.size.x / gameArea.x,
-        state.canvas.size.y / gameArea.y
-      ) * state.renderingConfig.scaling,
+    center,
+    scale,
     canvasSize: state.canvas.size,
   };
 };
