@@ -97,6 +97,20 @@ export class WholeGameProcessing {
       paddle: 90,
       block: 80,
       hitEffect: 70,
+      survivableAreaOutline: 60,
+    };
+  }
+
+  static getColors() {
+    return {
+      deadlyEffect: 0xffffff,
+      ball: 0xff0000,
+      paddle: 0xff0000,
+      block: 0xff0000,
+      hitEffect: 0xffffff,
+      background: 0x000000,
+      outside: 0x222222,
+      survivableAreaOutline: 0xff0000,
     };
   }
 }

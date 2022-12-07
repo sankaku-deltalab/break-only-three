@@ -15,6 +15,7 @@ import {LineEffect, LineEffectTrait} from '../components/line-effect';
 import {gameAreaRect, unit} from '../constants';
 import {BoLevelTrait} from '../level';
 import {TryStgSetting} from '../setting';
+import {WholeGameProcessing} from '../whole-processing';
 
 type Stg = TryStgSetting;
 
@@ -99,6 +100,8 @@ const createLineEffects = (origin: Vec2d, direction: Vec2d): LineEffect[] => {
       y: (Math.random() - 0.5) * 16 * unit,
     };
     const destRel = Vec2dTrait.add(destRelBase, destRelDelta);
+    const zIndex = WholeGameProcessing.getZIndex().deadlyEffect;
+    const color = WholeGameProcessing.getColors().deadlyEffect;
     return LineEffectTrait.create({
       lifeTimeMs: 500,
       activateDelayMs: 0,
@@ -106,8 +109,8 @@ const createLineEffects = (origin: Vec2d, direction: Vec2d): LineEffect[] => {
       destRel,
 
       key: `line${i}`,
-      zIndex: 0,
-      color: 0x7cfc00,
+      zIndex,
+      color,
       thickness: unit / 1,
     });
   });

@@ -58,10 +58,11 @@ export class DefaultBlockBeh implements ActressBehavior<Stg, BT, MT> {
     );
     const {nw, se, ne, sw} = AaRect2dTrait.corners(relArea);
     const zIndex = WholeGameProcessing.getZIndex().block;
+    const color = WholeGameProcessing.getColors().block;
     const line = LineGraphicTrait.create({
       key: 'main',
       pos: st.body.pos.pos,
-      color: 0xff0000,
+      color,
       paths: [nw, ne, se, sw],
       thickness: 2,
       closed: true,

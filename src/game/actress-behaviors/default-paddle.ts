@@ -156,14 +156,15 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
     );
     const {nw, se, ne, sw} = AaRect2dTrait.corners(relArea);
     const zIndex = WholeGameProcessing.getZIndex().paddle;
+    const color = WholeGameProcessing.getColors().paddle;
     const paddleLine = LineGraphicTrait.create({
       key: 'main',
       pos: st.body.pos.pos,
-      color: 0xff0000,
+      color,
       paths: [nw, ne, se, sw],
       thickness: 2,
       closed: true,
-      zIndex: 0,
+      zIndex,
     });
 
     const launchPos = st.mind.launcher.launchPosOffset;
@@ -176,11 +177,11 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
             LineGraphicTrait.create({
               key: 'launchGuide',
               pos: st.body.pos.pos,
-              color: 0xff0000,
+              color,
               paths: [launchPos, launchDest],
               thickness: 5,
               closed: false,
-              zIndex: 0,
+              zIndex,
             }),
           ];
 

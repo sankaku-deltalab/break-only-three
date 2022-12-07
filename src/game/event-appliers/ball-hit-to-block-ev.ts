@@ -14,6 +14,7 @@ import {BallMovementTrait} from '../components/ball-movement';
 import {LineEffect, LineEffectTrait} from '../components/line-effect';
 import {unit} from '../constants';
 import {TryStgSetting} from '../setting';
+import {WholeGameProcessing} from '../whole-processing';
 
 type Stg = TryStgSetting;
 
@@ -100,6 +101,8 @@ export class BallHitToBlockEv implements EventManipulator<Stg, EvType> {
 }
 
 const createLineEffects = (origin: Vec2d): LineEffect[] => {
+  const zIndex = WholeGameProcessing.getZIndex().hitEffect;
+  const color = WholeGameProcessing.getColors().hitEffect;
   return Im.range(0, 5).map(i => {
     const destRel = {
       x: (Math.random() - 0.5) * 8 * unit,
@@ -112,8 +115,8 @@ const createLineEffects = (origin: Vec2d): LineEffect[] => {
       destRel,
 
       key: `line${i}`,
-      zIndex: 0,
-      color: 0xffffff,
+      zIndex,
+      color,
       thickness: unit / 8,
     });
   });

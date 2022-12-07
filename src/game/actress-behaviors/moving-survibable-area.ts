@@ -16,6 +16,7 @@ import {
 import {TryStgSetting} from '../setting';
 import {LineEffectTrait} from '../components/line-effect';
 import {gameAreaNW, gameAreaSE, unit} from '../constants';
+import {WholeGameProcessing} from '../whole-processing';
 
 type Stg = TryStgSetting;
 
@@ -53,13 +54,15 @@ export class MovingSurvivableArea implements ActressBehavior<Stg, BT, MT> {
     }
   ): Graphic<Stg>[] {
     const {nw, ne, se, sw} = AaRect2dTrait.corners(st.body.area);
+    const zIndex = WholeGameProcessing.getZIndex().survivableAreaOutline;
+    const color = WholeGameProcessing.getColors().survivableAreaOutline;
     return [
       LineGraphicTrait.create({
         key: st.mindId + 'area',
         pos: Vec2dTrait.zero(),
-        zIndex: 0,
+        zIndex,
         thickness: 1,
-        color: 0x005555,
+        color,
         paths: [nw, ne, se, sw],
         closed: true,
       }),

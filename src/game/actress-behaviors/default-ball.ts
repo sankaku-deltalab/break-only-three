@@ -85,10 +85,11 @@ export class DefaultBallBeh implements ActressBehavior<Stg, BT, MT> {
     );
     const {nw, se, ne, sw} = AaRect2dTrait.corners(relArea);
     const zIndex = WholeGameProcessing.getZIndex().ball;
+    const color = WholeGameProcessing.getColors().ball;
     const line = LineGraphicTrait.create({
       key: 'main',
       pos: st.body.pos.pos,
-      color: 0xff0000,
+      color,
       paths: [nw, ne, se, sw],
       thickness: 2,
       closed: true,

@@ -13,6 +13,7 @@ import {LineEffect, LineEffectTrait} from '../components/line-effect';
 import {gameAreaSE, unit} from '../constants';
 import {BoLevelTrait} from '../level';
 import {TryStgSetting} from '../setting';
+import {WholeGameProcessing} from '../whole-processing';
 
 type Stg = TryStgSetting;
 
@@ -74,6 +75,8 @@ export class BallWasFallenEv implements EventManipulator<Stg, EvType> {
 }
 
 const createLineEffects = (origin: Vec2d): LineEffect[] => {
+  const zIndex = WholeGameProcessing.getZIndex().deadlyEffect;
+  const color = WholeGameProcessing.getColors().deadlyEffect;
   return Im.range(0, 15).map(i => {
     const destRel = {
       x: (Math.random() - 0.5) * 16 * unit,
@@ -86,8 +89,8 @@ const createLineEffects = (origin: Vec2d): LineEffect[] => {
       destRel,
 
       key: `line${i}`,
-      zIndex: 0,
-      color: 0x1e90ff,
+      zIndex,
+      color,
       thickness: unit / 8,
     });
   });

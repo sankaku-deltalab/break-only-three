@@ -23,6 +23,7 @@ import {
   Vec2d,
   Vec2dTrait,
 } from 'curtain-call3';
+import {WholeGameProcessing} from '../../game/whole-processing';
 
 const vec2d = Vec2dTrait;
 
@@ -89,6 +90,8 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
 
   const lineGraphics = graphics.filter(GraphicHelper.isCanvasLineGraphic);
   const spriteGraphics = graphics.filter(GraphicHelper.isCanvasSpriteGraphic);
+  const backgroundColor = WholeGameProcessing.getColors().background;
+  const outsideColor = WholeGameProcessing.getColors().outside;
 
   return (
     <div
@@ -105,11 +108,20 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
       >
         <Updater />
         <Graphics
+          zIndex={-10}
+          draw={g => {
+            g.clear();
+            g.beginFill(outsideColor);
+            g.drawRect(0, 0, canvasSize.x, canvasSize.y);
+            g.endFill();
+          }}
+        />
+        <Graphics
           ref={maskRef}
           zIndex={-1}
           draw={g => {
             g.clear();
-            g.beginFill(0xffffff);
+            g.beginFill(backgroundColor);
             g.drawRect(renNw.x, renNw.y, renSize.x, renSize.y);
             g.endFill();
           }}
@@ -118,7 +130,7 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
           zIndex={-1}
           draw={g => {
             g.clear();
-            g.beginFill(0xaaaaaa);
+            g.beginFill(backgroundColor);
             g.drawRect(renNw.x, renNw.y, renSize.x, renSize.y);
             g.endFill();
           }}
