@@ -98,6 +98,9 @@ export const gameSlice = createSlice({
         state.pointer.canvasPos
       );
     },
+    pointerMovedTo: (state, action: PayloadAction<{pos: Vec2d}>) => {
+      state.pointer.canvasPos = action.payload.pos;
+    },
     downPointer: (state, action: PayloadAction<{pos: Vec2d}>) => {
       state.pointer.canvasPos = action.payload.pos;
       state.pointer.down = true;
@@ -200,6 +203,7 @@ export const gameSlice = createSlice({
 export const {
   setCanvasSize,
   movePointer,
+  pointerMovedTo,
   upPointer,
   downPointer,
   updateGame,

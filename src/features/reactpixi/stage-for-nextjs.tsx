@@ -11,6 +11,7 @@ import {
   selectCanvasSize,
   updateGame,
   selectRenderingArea,
+  pointerMovedTo,
 } from './gameSlice';
 import {
   AaRect2d,
@@ -73,7 +74,12 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
   };
 
   const handlePointerMove = (e: PointerEvent<HTMLElement>) => {
-    dispatch(movePointer({delta: {x: e.movementX, y: e.movementY}}));
+    const pos = getCanvasPos({
+      x: e.clientX,
+      y: e.clientY,
+    });
+    if (pos.err) return;
+    dispatch(pointerMovedTo({pos: pos.val}));
   };
 
   const Updater = () => {
