@@ -77,7 +77,7 @@ export class WholeGameProcessing {
       return stop * r + start * (1 - r);
     };
     const velocityDir = randIn(Math.PI * 0.25, Math.PI * 0.25 * 3);
-    const speed = lerp(args.score / 5, unit / 2000, unit / 1000);
+    const speed = lerp(args.score / 10, unit / 2000, unit / 500);
     const velocity = Vec2dTrait.fromRadians(velocityDir, speed);
     return WholeGameProcessing.initGameState({
       score: args.score,
