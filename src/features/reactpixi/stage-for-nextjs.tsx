@@ -95,16 +95,23 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
 
   return (
     <div
-      style={{width: 2, height: 2, position: 'absolute', top: 0, left: 0}}
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
-      onPointerMove={handlePointerMove}
+      style={{
+        width: 2,
+        height: 2,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        pointerEvents: 'auto',
+      }}
       ref={canvasRef}
     >
       <Stage
         width={canvasSize.x}
         height={canvasSize.y}
         style={{position: 'fixed', top: 0, left: 0}}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerMove={handlePointerMove}
       >
         <Updater />
         <Graphics
