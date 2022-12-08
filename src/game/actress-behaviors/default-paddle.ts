@@ -18,7 +18,7 @@ import {
   Vec2dTrait,
   VisibleGameState,
 } from 'curtain-call3';
-import {gameArea, gameAreaRect, unit} from '../constants';
+import {gameArea, gameAreaRect, gameAreaSE, unit} from '../constants';
 import {TryStgSetting} from '../setting';
 import {PosTrait} from '../components/pos';
 import {PaddleStatusTrait} from '../components/paddle-status';
@@ -42,7 +42,7 @@ export class DefaultPaddleTrait {
       bodyType: 'paddle',
       mindType: 'defaultPaddle',
       body: {
-        pos: PosTrait.create({pos: {x: 0, y: unit}}),
+        pos: PosTrait.create({pos: {x: 0, y: gameAreaSE.y - unit}}),
         status: PaddleStatusTrait.create({
           size: {x: unit, y: unit / 4},
           reflectOffset: {x: 0, y: 1 * unit},
