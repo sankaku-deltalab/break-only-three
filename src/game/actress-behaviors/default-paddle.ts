@@ -116,7 +116,7 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
     );
     const velocity = Vec2dTrait.fromRadians(
       act.mind.launcher.direction,
-      (10 * unit) / 1000
+      (7 * unit) / 1000
     );
 
     return [
