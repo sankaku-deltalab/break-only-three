@@ -6,6 +6,7 @@ import {LineEffect} from './components/line-effect';
 import {PaddleStatus} from './components/paddle-status';
 import {Pos} from './components/pos';
 import {BoLevelState} from './level';
+import {PerkTypes} from './perk';
 
 type StrictAs<Base, T extends Base> = T;
 
@@ -45,6 +46,7 @@ export type TryStgSetting = StrictAs<
       annihilatedStateWasFinished: {};
       fallenStateWasFinished: {};
       anyBlockGetOutFromSurvivableArea: {blockIds: BodyId[]};
+      userChosePerk: {perk: PerkTypes};
     };
     representation: {score: number; ended: boolean};
     notifications: {

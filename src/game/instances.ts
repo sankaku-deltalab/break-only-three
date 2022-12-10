@@ -15,6 +15,7 @@ import {BallWasFallenEv} from './event-appliers/ball-was-fallen-ev';
 import {FallenStateWasFinishedEv} from './event-appliers/fallen-state-was-finished';
 import {LaunchBallEv} from './event-appliers/launch-ball-ev';
 import {NopEv} from './event-appliers/nop-ev';
+import {UserChosePerkEv} from './event-appliers/use-chose-perk';
 import {TryStgSetting} from './setting';
 
 type Stg = TryStgSetting;
@@ -39,5 +40,6 @@ export const tryStgInstances: GameInstances<TryStgSetting> = {
     fallenStateWasFinished: new FallenStateWasFinishedEv(),
     annihilatedStateWasFinished: new AnnihilatedStateWasFinishedEv(),
     anyBlockGetOutFromSurvivableArea: new AnyBlockGetOutFromSurvivableArea(),
+    userChosePerk: new UserChosePerkEv(),
   },
 };
