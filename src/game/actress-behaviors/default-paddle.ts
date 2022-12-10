@@ -127,15 +127,11 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
       act.body.pos.pos,
       act.mind.launcher.launchPosOffset
     );
-    const velocity = Vec2dTrait.fromRadians(
-      act.mind.launcher.direction,
-      (7 * unit) / 1000
-    );
 
     return [
       EventTrait.createEvent<Stg, 'launchBall'>('launchBall', {
         ballPos,
-        velocity,
+        directionRad: act.mind.launcher.direction,
       }),
     ];
   };

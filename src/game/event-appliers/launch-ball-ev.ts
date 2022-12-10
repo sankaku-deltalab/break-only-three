@@ -6,6 +6,7 @@ import {
   Im,
   EventManipulator,
   Overlaps,
+  Vec2dTrait,
 } from 'curtain-call3';
 import {BallMovementTrait} from '../components/ball-movement';
 import {PosTrait} from '../components/pos';
@@ -31,7 +32,7 @@ export class LaunchBallEv implements EventManipulator<Stg, EvType> {
 
   applyEvent(
     state: GameState<Stg>,
-    {ballPos, velocity}: EventPayload<Stg, EvType>
+    {ballPos, directionRad}: EventPayload<Stg, EvType>
   ): GameState<Stg> {
     if (GameStateHelper.getLevel(state).automaton.type !== 'launching')
       return state;
@@ -42,6 +43,8 @@ export class LaunchBallEv implements EventManipulator<Stg, EvType> {
     const ballDiamRate = Math.max(1, ballSizeLevel) / 10;
     const ballDiamBase = unit / 8;
     const ballDiam = ballDiamRate * ballDiamBase;
+
+    const velocity = Vec2dTrait.fromRadians(directionRad, (7 * unit) / 1000);
 
     const ballInit = ActressHelper.createActressInitializer<
       Stg,
