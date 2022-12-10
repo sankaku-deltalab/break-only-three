@@ -43,6 +43,8 @@ export class DefaultPaddleTrait {
   }): ActressInitializer<Stg, 'paddle', 'defaultPaddle'> {
     const paddleWidth =
       unit * (SigilTrait.getPaddleSizeLevel(args.sigils) / 10);
+    const reflectOffsetLength =
+      unit * (SigilTrait.getPaddleFlatLevel(args.sigils) / 10);
     return {
       bodyType: 'paddle',
       mindType: 'defaultPaddle',
@@ -50,7 +52,7 @@ export class DefaultPaddleTrait {
         pos: PosTrait.create({pos: {x: 0, y: gameAreaSE.y - unit}}),
         status: PaddleStatusTrait.create({
           size: {x: paddleWidth, y: unit / 4},
-          reflectOffset: {x: 0, y: 1 * unit},
+          reflectOffset: {x: 0, y: reflectOffsetLength},
         }),
       },
       mind: DefaultPaddleTrait.createInitialMind(),
