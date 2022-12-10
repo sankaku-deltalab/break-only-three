@@ -142,11 +142,17 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
       gameState: VisibleGameState<Stg>;
     }
   ): ActressState<Stg, BT, MT> {
+    const launcherGuideSpeedLevel = SigilTrait.getLauncherGuideSpeedLevel(
+      BoLevelTrait.getSigils(args.gameState)
+    );
+    const launcherGuideSpeed = launcherGuideSpeedLevel / 10;
+
     let act = st;
     if (args.gameState.scene.level.automaton.type === 'launching') {
       act = Im.replace2(act, ['mind', 'launcher'], la =>
         BallLauncherTrait.update(la, {
           deltaMs: args.gameState.time.lastDeltaMs,
+          guideSpeedMlt: launcherGuideSpeed,
         })
       );
     }
@@ -238,12 +244,13 @@ export class BallLauncherTrait {
 
   static update(
     launcher: BallLauncherState,
-    args: {deltaMs: number}
+    args: {deltaMs: number; guideSpeedMlt: number}
   ): BallLauncherState {
     let dirSign = launcher.directionMoveSign;
     let newDirection =
       launcher.direction +
-      Math.abs(launcher.directionSpeed * args.deltaMs) * dirSign;
+      Math.abs(launcher.directionSpeed * args.deltaMs * args.guideSpeedMlt) *
+        dirSign;
     if (newDirection < launcher.directionRange.min) {
       newDirection = launcher.directionRange.min;
       dirSign = 1;
