@@ -18,6 +18,7 @@ import {PaddleStatusTrait} from '../components/paddle-status';
 import {PosTrait} from '../components/pos';
 import {BoLevelTrait} from '../level';
 import {TryStgSetting} from '../setting';
+import {SigilTrait} from '../sigil';
 
 type Stg = TryStgSetting;
 
@@ -56,6 +57,9 @@ export class BallHitToSurvivableArea implements EventManipulator<Stg, EvType> {
     const ball = GameStateHelper.getBody(state, ballId, 'ball');
     if (ball.err) throw new Error('no ball');
 
+    const penetrative = SigilTrait.getWallMakeBallPenetrative(
+      BoLevelTrait.getSigils(state)
+    );
     const movableArea = BoLevelTrait.getSurvivableArea(state, {});
     const posForArea = AaRect2dTrait.calcPointPosition(ball.val.pos.pos, {
       area: movableArea,
@@ -68,7 +72,7 @@ export class BallHitToSurvivableArea implements EventManipulator<Stg, EvType> {
       : Vec2dTrait.reflect(oldVelocity, normal);
     const newBall = Im.pipe(
       () => ball.val,
-      b => Im.replace(b, 'penetrative', () => false),
+      b => Im.replace(b, 'penetrative', () => penetrative),
       b =>
         Im.replace(b, 'movement', m =>
           BallMovementTrait.setVelocity(newVelocity)
