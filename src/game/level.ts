@@ -15,6 +15,24 @@ import {SigilsState} from './sigil';
 
 type Stg = TryStgSetting;
 
+/**
+ * @mermaid
+ * graph TD;
+ *   start
+ *   launching
+ *   released
+ *   fallen
+ *   annihilated
+ *   finished
+ *
+ *   start -- Start game --> launching
+ *   launching -- Launch ball from paddle --> released
+ *   released -- Ball was fallen --> fallen
+ *   fallen -- Game over scene finished --> finished
+ *   released -- Break all blocks --> annihilated
+ *   annihilated -- Clear scene finished --> launching
+ *
+ */
 export type StateType =
   | {type: 'launching'}
   | {type: 'released'}
