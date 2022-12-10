@@ -10,6 +10,7 @@ import {AnnihilatedStateWasFinishedEv} from './event-appliers/annihilated-state-
 import {AnyBlockGetOutFromSurvivableArea} from './event-appliers/any-block-get-out-from-survibable-area';
 import {BallHitToBlockEv} from './event-appliers/ball-hit-to-block-ev';
 import {BallHitToPaddleEv} from './event-appliers/ball-hit-to-paddle-ev';
+import {BallHitToSurvivableArea} from './event-appliers/ball-hit-to-survivable-area';
 import {BallWasFallenEv} from './event-appliers/ball-was-fallen-ev';
 import {FallenStateWasFinishedEv} from './event-appliers/fallen-state-was-finished';
 import {LaunchBallEv} from './event-appliers/launch-ball-ev';
@@ -32,6 +33,7 @@ export const tryStgInstances: GameInstances<TryStgSetting> = {
     launchBall: new LaunchBallEv(),
     ballHitToPaddle: new BallHitToPaddleEv(),
     ballHitToBlock: new BallHitToBlockEv(),
+    ballHitToSurvivableArea: new BallHitToSurvivableArea(),
     allBlocksAreBroken: new AllBlocksAreBrokenEv(),
     ballWasFallen: new BallWasFallenEv(),
     fallenStateWasFinished: new FallenStateWasFinishedEv(),

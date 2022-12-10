@@ -47,28 +47,14 @@ export class DefaultBallBeh implements ActressBehavior<Stg, BT, MT> {
       gameState: VisibleGameState<Stg>;
     }
   ): ActressState<Stg, BT, MT> {
-    const movableArea = BoLevelTrait.getSurvivableArea(args.gameState, {});
-    const posForArea = AaRect2dTrait.calcPointPosition(st.body.pos.pos, {
-      area: movableArea,
-    });
-    const normal = posForArea;
-    const oldVelocity = st.body.movement.velocity;
-    const canReflect = Vec2dTrait.dot(oldVelocity, normal) > 0;
-    const newVelocity = !canReflect
-      ? oldVelocity
-      : Vec2dTrait.reflect(oldVelocity, normal);
     const delta = Vec2dTrait.mlt(
-      newVelocity,
+      st.body.movement.velocity,
       TimeTrait.lastDeltaMs(args.gameState.time)
     );
     const body = pipe(
       () => st.body,
       b => Im.replace(b, 'pos', p => PosTrait.copyPosToPrev(p)),
-      b => Im.replace(b, 'pos', p => PosTrait.move(p, delta)),
-      b =>
-        Im.replace(b, 'movement', m =>
-          BallMovementTrait.setVelocity(newVelocity)
-        )
+      b => Im.replace(b, 'pos', p => PosTrait.move(p, delta))
     )();
     return Im.replace(st, 'body', () => body);
   }

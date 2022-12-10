@@ -62,7 +62,7 @@ export type GameSliceState = {
 };
 
 const generateInitialGameState = (): GameState<Stg> => {
-  return WholeGameProcessing.generateInitialGameState({score: 0});
+  return WholeGameProcessing.generateInitialGameState({});
 };
 
 const initialState: GameSliceState = {

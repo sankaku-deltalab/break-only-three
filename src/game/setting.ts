@@ -39,6 +39,7 @@ export type TryStgSetting = StrictAs<
       launchBall: {ballPos: Vec2d; velocity: Vec2d};
       ballHitToPaddle: {ballId: BodyId; paddleId: BodyId};
       ballHitToBlock: {ballId: BodyId; blockId: BodyId};
+      ballHitToSurvivableArea: {ballId: BodyId};
       allBlocksAreBroken: {};
       ballWasFallen: {ballId: BodyId};
       annihilatedStateWasFinished: {};
