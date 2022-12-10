@@ -44,7 +44,12 @@ export class LaunchBallEv implements EventManipulator<Stg, EvType> {
     const ballDiamBase = unit / 8;
     const ballDiam = ballDiamRate * ballDiamBase;
 
-    const velocity = Vec2dTrait.fromRadians(directionRad, (7 * unit) / 1000);
+    const speedLevel = SigilTrait.getBallSpeedLevel(
+      BoLevelTrait.getSigils(state)
+    );
+    const speedBase = (7 * unit) / 1000;
+    const speed = Math.max(0.1, speedLevel / 10) * speedBase;
+    const velocity = Vec2dTrait.fromRadians(directionRad, speed);
 
     const ballInit = ActressHelper.createActressInitializer<
       Stg,
