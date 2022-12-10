@@ -43,8 +43,9 @@ export class AnnihilatedStateWasFinishedEv
     state: GameState<Stg>,
     {}: EventPayload<Stg, EvType>
   ): GameState<Stg> {
-    const oldScore = GameStateHelper.getLevel(state).score;
-    return WholeGameProcessing.generateInitialGameState({score: oldScore + 1});
+    return WholeGameProcessing.generateInitialGameState({
+      prevState: state,
+    });
     // return Im.pipe(
     //   () => state,
     //   st =>

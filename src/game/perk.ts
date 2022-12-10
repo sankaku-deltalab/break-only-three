@@ -17,6 +17,10 @@ export type PerkTypes = keyof typeof perks;
 export type PerksState = Record<PerkTypes, number>;
 
 export class PerkTrait {
+  static getZeroPerks(): PerksState {
+    return Im.mapObj(perks, () => 0);
+  }
+
   static convertPerksToSigils(perks: PerksState): SigilsState {
     return Enum.reduce(
       Object.keys(perks) as PerkTypes[],

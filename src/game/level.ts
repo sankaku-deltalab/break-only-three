@@ -9,6 +9,7 @@ import {
   Vec2dTrait,
 } from 'curtain-call3';
 import {gameArea, gameAreaRect, unit} from './constants';
+import {PerksState, PerkTrait} from './perk';
 import {TryStgSetting} from './setting';
 
 type Stg = TryStgSetting;
@@ -21,6 +22,7 @@ export type StateType =
   | {type: 'finished'};
 
 export type BoLevelState = {
+  perks: PerksState;
   score: number;
   ended: boolean;
   wholeVelocity: Vec2d;
@@ -34,6 +36,7 @@ export class BoLevelTrait {
     wholeVelocity: Vec2d;
   }): BoLevelState {
     return {
+      perks: PerkTrait.getZeroPerks(),
       score: opt.score,
       ended: false,
       wholeVelocity: opt.wholeVelocity,

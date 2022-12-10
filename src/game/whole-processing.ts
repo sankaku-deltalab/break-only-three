@@ -14,11 +14,13 @@ import {MovingSurvivableAreaTrait} from './actress-behaviors/moving-survibable-a
 import {PosTrait} from './components/pos';
 import {gameArea, unit} from './constants';
 import {BoLevelTrait} from './level';
+import {PerksState, PerkTrait} from './perk';
 import {TryStgSetting} from './setting';
 
 type Stg = TryStgSetting;
 
 export type GameInit = {
+  perks: PerksState;
   score: number;
   scoreMlt: number;
   blockPositions: Vec2d[];
@@ -27,7 +29,8 @@ export type GameInit = {
 
 export class WholeGameProcessing {
   static initGameState(opt: GameInit): GameState<Stg> {
-    const paddle = DefaultPaddleTrait.createActInit();
+    const sigils = PerkTrait.convertPerksToSigils(opt.perks);
+    const paddle = DefaultPaddleTrait.createActInit({sigils});
     const survivableArea = MovingSurvivableAreaTrait.createActInit();
 
     const blockPositionsX = Im.range(-2, 3).map(i => (i * unit) / 1);
@@ -71,16 +74,25 @@ export class WholeGameProcessing {
     )();
   }
 
-  static generateInitialGameState(args: {score: number}): GameState<Stg> {
+  static generateInitialGameState(args: {
+    prevState?: GameState<Stg>;
+  }): GameState<Stg> {
     const randIn = (start: number, stop: number): number => {
       const r = Math.random();
       return stop * r + start * (1 - r);
     };
+    const score = args.prevState
+      ? GameStateHelper.getLevel(args.prevState).score + 1
+      : 0;
+    const perks = args.prevState
+      ? GameStateHelper.getLevel(args.prevState).perks
+      : PerkTrait.getZeroPerks();
     const velocityDir = randIn(Math.PI * 0.25, Math.PI * 0.25 * 3);
-    const speed = lerp(args.score / 10, unit / 2000, unit / 500);
+    const speed = lerp(score / 10, unit / 2000, unit / 500);
     const velocity = Vec2dTrait.fromRadians(velocityDir, speed);
     return WholeGameProcessing.initGameState({
-      score: args.score,
+      perks,
+      score: score,
       scoreMlt: 1,
       blockPositions: Enum.map(Im.range(0, 3), i => ({
         x: (i * 5 * unit) / 6,

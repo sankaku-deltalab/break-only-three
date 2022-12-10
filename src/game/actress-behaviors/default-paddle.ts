@@ -24,6 +24,7 @@ import {PosTrait} from '../components/pos';
 import {PaddleStatusTrait} from '../components/paddle-status';
 import {BoLevelTrait} from '../level';
 import {WholeGameProcessing} from '../whole-processing';
+import {SigilsState, SigilTrait} from '../sigil';
 
 type Stg = TryStgSetting;
 
@@ -37,14 +38,18 @@ export type DefaultPaddleState = {
 };
 
 export class DefaultPaddleTrait {
-  static createActInit(): ActressInitializer<Stg, 'paddle', 'defaultPaddle'> {
+  static createActInit(args: {
+    sigils: SigilsState;
+  }): ActressInitializer<Stg, 'paddle', 'defaultPaddle'> {
+    const paddleWidth =
+      unit * (SigilTrait.getPaddleSizeLevel(args.sigils) / 10);
     return {
       bodyType: 'paddle',
       mindType: 'defaultPaddle',
       body: {
         pos: PosTrait.create({pos: {x: 0, y: gameAreaSE.y - unit}}),
         status: PaddleStatusTrait.create({
-          size: {x: unit, y: unit / 4},
+          size: {x: paddleWidth, y: unit / 4},
           reflectOffset: {x: 0, y: 1 * unit},
         }),
       },
