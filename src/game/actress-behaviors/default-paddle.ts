@@ -80,11 +80,17 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
       gameState: VisibleGameState<Stg>;
     }
   ): ActressState<Stg, BT, MT> {
+    const sensitivityLevel = SigilTrait.getPaddleSensitivityLevel(
+      BoLevelTrait.getSigils(args.gameState)
+    );
+    const sensitivity = (sensitivityLevel + 5) / 10;
+
     const movableArea = AaRect2dTrait.reduceArea(
       BoLevelTrait.getSurvivableArea(args.gameState, {}),
       st.body.status.size
     );
-    const delta = InputHelper.deltaWhileDown(args.gameState);
+    const pointerDelta = InputHelper.deltaWhileDown(args.gameState);
+    const delta = Vec2dTrait.mlt(pointerDelta, sensitivity);
     const newPos = AaRect2dTrait.clampPosition(
       Vec2dTrait.add(st.body.pos.pos, delta),
       movableArea

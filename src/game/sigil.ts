@@ -37,6 +37,12 @@ export class SigilTrait {
     return (sigils.paddleMakeBallPenetrative ?? 0) > 0;
   }
 
+  static getPaddleSensitivityLevel(sigils: SigilsState): number {
+    const defaultLevel = 10;
+    const additive = sigils.paddleSensitivity ?? 0;
+    return defaultLevel + additive;
+  }
+
   static getBallSizeLevel(sigils: SigilsState): number {
     const defaultLevel = 10;
     const additive = sigils.biggerBall ?? 0;
