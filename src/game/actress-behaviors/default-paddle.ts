@@ -182,8 +182,15 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
       zIndex,
     });
 
+    const launcherGuideLengthLevel = SigilTrait.getLauncherGuideLengthLevel(
+      BoLevelTrait.getSigils(args.gameState)
+    );
+    const launcherGuideLength = (launcherGuideLengthLevel / 10) * unit;
     const launchPos = st.mind.launcher.launchPosOffset;
-    const direction = Vec2dTrait.fromRadians(st.mind.launcher.direction, unit);
+    const direction = Vec2dTrait.fromRadians(
+      st.mind.launcher.direction,
+      launcherGuideLength
+    );
     const launchDest = Vec2dTrait.add(launchPos, direction);
     const launchLines =
       GameStateHelper.getLevel(args.gameState).automaton.type !== 'launching'
