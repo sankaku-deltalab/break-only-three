@@ -9,7 +9,9 @@ import {
 } from 'curtain-call3';
 import {BallMovementTrait} from '../components/ball-movement';
 import {PaddleStatusTrait} from '../components/paddle-status';
+import {BoLevelTrait} from '../level';
 import {TryStgSetting} from '../setting';
+import {SigilTrait} from '../sigil';
 
 type Stg = TryStgSetting;
 
@@ -51,6 +53,10 @@ export class BallHitToPaddleEv implements EventManipulator<Stg, EvType> {
     if (ball.err) throw new Error('no ball');
     if (paddle.err) throw new Error('no paddle');
 
+    const penetrative = SigilTrait.getPaddleMakeBallPenetrative(
+      BoLevelTrait.getSigils(state)
+    );
+
     const newBallBody = Im.pipe(
       () => ball.val,
       ball =>
@@ -65,7 +71,7 @@ export class BallHitToPaddleEv implements EventManipulator<Stg, EvType> {
             normal: reflectNormal,
           });
         }),
-      ball => Im.replace(ball, 'penetrative', () => false)
+      ball => Im.replace(ball, 'penetrative', () => penetrative)
     )();
 
     return Im.pipe(

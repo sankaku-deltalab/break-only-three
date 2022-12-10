@@ -11,6 +11,7 @@ import {
 import {gameArea, gameAreaRect, unit} from './constants';
 import {PerksState, PerkTrait} from './perk';
 import {TryStgSetting} from './setting';
+import {SigilsState} from './sigil';
 
 type Stg = TryStgSetting;
 
@@ -43,6 +44,11 @@ export class BoLevelTrait {
       wholeMovementFreezeEndTimeMs: -1,
       automaton: {type: 'launching'},
     };
+  }
+
+  static getSigils(state: GameState<Stg>): SigilsState {
+    const perks = GameStateHelper.getLevel(state).perks;
+    return PerkTrait.convertPerksToSigils(perks);
   }
 
   static changeToFallenState(
