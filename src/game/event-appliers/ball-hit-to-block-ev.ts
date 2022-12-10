@@ -13,7 +13,9 @@ import {
 import {BallMovementTrait} from '../components/ball-movement';
 import {LineEffect, LineEffectTrait} from '../components/line-effect';
 import {unit} from '../constants';
+import {BoLevelTrait} from '../level';
 import {TryStgSetting} from '../setting';
+import {SigilTrait} from '../sigil';
 import {WholeGameProcessing} from '../whole-processing';
 
 type Stg = TryStgSetting;
@@ -88,6 +90,11 @@ export class BallHitToBlockEv implements EventManipulator<Stg, EvType> {
       mind: {effects: createLineEffects(block.val.pos.pos)},
     });
 
+    const hitStopPeriodLevel = SigilTrait.getAreaHitStopPeriodLevel(
+      BoLevelTrait.getSigils(state)
+    );
+    const hitStopPeriod = 100 * (hitStopPeriodLevel / 10);
+
     return Im.pipe(
       () => state,
       st =>
@@ -100,7 +107,7 @@ export class BallHitToBlockEv implements EventManipulator<Stg, EvType> {
           Im.replace(
             lv,
             'wholeMovementFreezeEndTimeMs',
-            () => st.time.gameTimeMs + 100
+            () => st.time.gameTimeMs + hitStopPeriod
           )
         ),
       st => GameStateHelper.addActress(st, effectInit).state
