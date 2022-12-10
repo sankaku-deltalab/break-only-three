@@ -58,15 +58,20 @@ export class BallHitToBlockEv implements EventManipulator<Stg, EvType> {
     if (ball.err) throw new Error('no ball');
     if (block.err) throw new Error('no block');
 
-    const newBallBody = Im.replace(ball.val, 'movement', mov => {
-      const pos = ball.val.pos.pos;
-      const prevPos = ball.val.pos.prevPos;
-      const wallShape = AaRect2dTrait.fromCenterAndSize(
-        block.val.pos.pos,
-        block.val.size
-      );
-      return BallMovementTrait.reflect(mov, {pos, prevPos, wallShape});
-    });
+    const newBallBody = Im.pipe(
+      () => ball.val,
+      ball =>
+        Im.replace(ball, 'movement', mov => {
+          const pos = ball.pos.pos;
+          const prevPos = ball.pos.prevPos;
+          const wallShape = AaRect2dTrait.fromCenterAndSize(
+            block.val.pos.pos,
+            block.val.size
+          );
+          return BallMovementTrait.reflect(mov, {pos, prevPos, wallShape});
+        }),
+      ball => Im.replace(ball, 'penetrative', () => false)
+    )();
 
     const newBlockBody = Im.replace(block.val, 'meta', meta => {
       return {...meta, del: true};

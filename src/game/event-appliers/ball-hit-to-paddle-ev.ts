@@ -51,15 +51,22 @@ export class BallHitToPaddleEv implements EventManipulator<Stg, EvType> {
     if (ball.err) throw new Error('no ball');
     if (paddle.err) throw new Error('no paddle');
 
-    const newBallBody = Im.replace(ball.val, 'movement', mov => {
-      const ballPos = ball.val.pos.pos;
-      const reflectNormal = PaddleStatusTrait.calcReflectNormal({
-        ballPos,
-        paddle: paddle.val.status,
-        paddlePos: paddle.val.pos.pos,
-      });
-      return BallMovementTrait.reflectByNormal(mov, {normal: reflectNormal});
-    });
+    const newBallBody = Im.pipe(
+      () => ball.val,
+      ball =>
+        Im.replace(ball, 'movement', mov => {
+          const ballPos = ball.pos.pos;
+          const reflectNormal = PaddleStatusTrait.calcReflectNormal({
+            ballPos,
+            paddle: paddle.val.status,
+            paddlePos: paddle.val.pos.pos,
+          });
+          return BallMovementTrait.reflectByNormal(mov, {
+            normal: reflectNormal,
+          });
+        }),
+      ball => Im.replace(ball, 'penetrative', () => false)
+    )();
 
     return Im.pipe(
       () => state,

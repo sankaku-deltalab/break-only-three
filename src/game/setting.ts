@@ -17,7 +17,12 @@ export type TryStgSetting = StrictAs<
     level: BoLevelState;
     bodies: {
       paddle: {pos: Pos; status: PaddleStatus};
-      ball: {pos: Pos; movement: BallMovement; diam: number};
+      ball: {
+        pos: Pos;
+        movement: BallMovement;
+        diam: number;
+        penetrative: boolean;
+      };
       block: {pos: Pos; size: Vec2d};
       survivableArea: {area: AaRect2d};
       effectBody: {};

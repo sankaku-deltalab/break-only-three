@@ -46,6 +46,7 @@ export class LaunchBallEv implements EventManipulator<Stg, EvType> {
         pos: PosTrait.create({pos: ballPos}),
         diam: unit / 8,
         movement: BallMovementTrait.create({velocity}),
+        penetrative: false,
       },
       mind: {},
     });
