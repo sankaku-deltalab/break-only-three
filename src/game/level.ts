@@ -24,14 +24,15 @@ type Stg = TryStgSetting;
  *   fallen
  *   annihilated
  *   finished
+ *   choosingPerk
  *
  *   start -- Start game --> launching
  *   launching -- Launch ball from paddle --> released
  *   released -- Ball was fallen --> fallen
  *   fallen -- Game over scene finished --> finished
  *   released -- Break all blocks --> annihilated
- *   annihilated -- Clear scene finished --> launching
- *
+ *   annihilated -- Clear scene finished --> choosingPerk
+ *   choosingPerk -- User chose perk --> launching
  */
 export type StateType =
   | {type: 'launching'}
