@@ -10,8 +10,9 @@ import {
 import {BallMovementTrait} from '../components/ball-movement';
 import {PosTrait} from '../components/pos';
 import {unit} from '../constants';
-import {StateType} from '../level';
+import {BoLevelTrait, StateType} from '../level';
 import {TryStgSetting} from '../setting';
+import {SigilTrait} from '../sigil';
 
 type Stg = TryStgSetting;
 
@@ -35,6 +36,13 @@ export class LaunchBallEv implements EventManipulator<Stg, EvType> {
     if (GameStateHelper.getLevel(state).automaton.type !== 'launching')
       return state;
 
+    const ballSizeLevel = SigilTrait.getBallSizeLevel(
+      BoLevelTrait.getSigils(state)
+    );
+    const ballDiamRate = Math.max(1, ballSizeLevel) / 10;
+    const ballDiamBase = unit / 8;
+    const ballDiam = ballDiamRate * ballDiamBase;
+
     const ballInit = ActressHelper.createActressInitializer<
       Stg,
       'ball',
@@ -44,7 +52,7 @@ export class LaunchBallEv implements EventManipulator<Stg, EvType> {
       mindType: 'defaultBall',
       body: {
         pos: PosTrait.create({pos: ballPos}),
-        diam: unit / 8,
+        diam: ballDiam,
         movement: BallMovementTrait.create({velocity}),
         penetrative: false,
       },
