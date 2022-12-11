@@ -20,7 +20,6 @@ export class BallMovementTrait {
     ball: BallMovement,
     args: {prevPos: Vec2d; pos: Vec2d; wallShape: AaRect2d}
   ): BallMovement {
-    // TODO: 相手が paddle だったとき、paddle が ball の動きに垂直な方向でたたくと、想定してない方向に反射してしまう。
     const prevPosPosition = AaRect2dTrait.calcPointPosition(args.prevPos, {
       area: args.wallShape,
     });
@@ -29,11 +28,11 @@ export class BallMovementTrait {
     });
     const position = Vec2dTrait.isZero(posPosition)
       ? prevPosPosition
-      : posPosition; // TODO: rewrite with using normal
+      : posPosition;
 
-    if (Vec2dTrait.isZero(position)) return ball;
-
-    const normal = Vec2dTrait.uniformed(position);
+    const normal = Vec2dTrait.isZero(position)
+      ? {x: 0, y: 1}
+      : Vec2dTrait.uniformed(position);
     return this.reflectByNormal(ball, {normal});
   }
 
