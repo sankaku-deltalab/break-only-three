@@ -92,7 +92,7 @@ export class DefaultPaddleBeh implements ActressBehavior<Stg, BT, MT> {
     const sensitivityLevel = SigilTrait.getPaddleSensitivityLevel(
       BoLevelTrait.getSigils(args.gameState)
     );
-    const sensitivity = (sensitivityLevel + 5) / 10;
+    const sensitivity = sensitivityLevel / 10;
 
     const movableArea = AaRect2dTrait.reduceArea(
       BoLevelTrait.getSurvivableArea(args.gameState, {}),

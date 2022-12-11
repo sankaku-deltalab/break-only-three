@@ -80,7 +80,7 @@ const perkToSigil: Record<PerkTypes, Partial<SigilsState>> = {
   bigPaddle: {paddleExpansion: 10},
   flatPaddle: {paddleFlatten: 10},
   penetrativePaddle: {paddleMakeBallPenetrative: 1},
-  hyperSensitivePaddle: {paddleSensitivity: 5},
+  hyperSensitivePaddle: {paddleSensitivity: 10},
   bigBall: {biggerBall: 5},
   slowBall: {slowerBall: 7},
   penetrativeWall: {wallMakeBallPenetrative: 1},
