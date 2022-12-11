@@ -25,8 +25,9 @@ export class PerkTrait {
     return Enum.reduce(
       Object.keys(perks) as PerkTypes[],
       SigilTrait.getZeroSigils(),
-      (p, sigil) => {
-        return Im.merge(sigil, perkToSigil[p]);
+      (p, sigils) => {
+        if ((perks[p] ?? 0) <= 0) return sigils;
+        return Im.merge(sigils, perkToSigil[p]);
       }
     );
   }
