@@ -14,6 +14,7 @@ import {
 import {Game} from '../page-components/game';
 import {PerksState, PerkTrait, PerkTypes} from '../game/perk';
 import {RecSetTrait} from 'curtain-call3';
+import {WholeGameProcessing} from '../game/whole-processing';
 
 const IndexPage: NextPage = () => {
   const mode = useAppSelector(selectMode);
@@ -88,6 +89,7 @@ const GameResult = () => {
     >
       <div>
         <h1>score: {result.score}</h1>
+        <p>{WholeGameProcessing.getEvaluationTextFromScore(result.score)}</p>
         <div>Tap to RESTART</div>
         <button
           onKeyDown={() => {}}
@@ -137,11 +139,13 @@ const tweetUrl = (args: {score: number; perks: PerksState}): string => {
   const perks = RecSetTrait.iter(
     PerkTrait.getPerksAlreadyHave(args.perks)
   ) as PerkTypes[];
+  const evalText = WholeGameProcessing.getEvaluationTextFromScore(args.score);
   const perksText =
     perks.length == 0
       ? 'NO PERKS'
       : perks.map(p => `[${PerkTrait.getPerkInfo(p).name}]`).join(' ');
-  const tweet_text = `Score: ${args.score}\nPerks: ${perksText}\n`;
+
+  const tweet_text = `Score: ${args.score}\n${evalText}\n---\nPerks: ${perksText}\n`;
   return constructUrl('http://twitter.com/intent/tweet', {
     host,
     text: tweet_text,

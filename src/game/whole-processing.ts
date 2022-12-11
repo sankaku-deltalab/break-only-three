@@ -126,6 +126,13 @@ export class WholeGameProcessing {
       survivableAreaOutline: 0xff0000,
     };
   }
+
+  static getEvaluationTextFromScore(score: number): string {
+    if (score >= 10) return 'You are SUPER HUMAN';
+    if (score >= 5) return 'You Beat Game!';
+    if (score <= 0) return 'We will meet again soon';
+    return 'You can do it';
+  }
 }
 
 const randomPop = <T>(items: T[], count: number): T[] => {
