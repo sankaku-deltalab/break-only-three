@@ -9,8 +9,11 @@ import {
   selectMode,
   selectResult,
   restartGame,
+  selectLevelState,
 } from '../features/reactpixi/gameSlice';
 import {Game} from '../page-components/game';
+import {PerksState, PerkTrait, PerkTypes} from '../game/perk';
+import {RecSetTrait} from 'curtain-call3';
 
 const IndexPage: NextPage = () => {
   const mode = useAppSelector(selectMode);
@@ -89,7 +92,10 @@ const GameResult = () => {
         <button
           onKeyDown={() => {}}
           onClick={e => {
-            location.href = tweetUrl({score: result.score});
+            location.href = tweetUrl({
+              score: result.score,
+              perks: result.perks,
+            });
             e.stopPropagation();
           }}
           style={{
@@ -126,9 +132,16 @@ const TwitterIcon = () => {
   );
 };
 
-const tweetUrl = (args: {score: number}): string => {
+const tweetUrl = (args: {score: number; perks: PerksState}): string => {
   const host = location.href;
-  const tweet_text = `Score: ${args.score}`;
+  const perks = RecSetTrait.iter(
+    PerkTrait.getPerksAlreadyHave(args.perks)
+  ) as PerkTypes[];
+  const perksText =
+    perks.length == 0
+      ? 'NO PERKS'
+      : perks.map(p => `[${PerkTrait.getPerkInfo(p).name}]`).join(' ');
+  const tweet_text = `Score: ${args.score}\nPerks: ${perksText}\n`;
   return constructUrl('http://twitter.com/intent/tweet', {
     host,
     text: tweet_text,

@@ -26,6 +26,7 @@ import {
   Result,
   AnyEvent,
   LevelState,
+  NotificationTypes,
 } from 'curtain-call3';
 import {gameArea, unit} from '../../game/constants';
 import {GameEndReason, TryStgSetting} from '../../game/setting';
@@ -38,13 +39,13 @@ import {BoLevelTrait} from '../../game/level';
 import {DefaultPaddleTrait} from '../../game/actress-behaviors/default-paddle';
 import {MovingSurvivableAreaTrait} from '../../game/actress-behaviors/moving-survibable-area';
 import {WholeGameProcessing} from '../../game/whole-processing';
-import {PerkTypes} from '../../game/perk';
+import {PerksState, PerkTrait, PerkTypes} from '../../game/perk';
 
 type Stg = TryStgSetting;
 
 const vec2d = Vec2dTrait;
 
-type GameResult = {endReason: GameEndReason; score: number};
+type GameResult = {endReason: GameEndReason; score: number; perks: PerksState};
 
 export type GameSliceState = {
   canvas: {
@@ -80,7 +81,7 @@ const initialState: GameSliceState = {
   },
   mode: 'menu',
   menu: {},
-  gameResult: {endReason: 'abort', score: 0},
+  gameResult: {endReason: 'abort', score: 0, perks: PerkTrait.getZeroPerks()},
   game: {
     gameProgress: {mode: 'not-started'},
     game: generateInitialGameState(),
@@ -199,6 +200,7 @@ export const gameSlice = createSlice({
           editableState.gameResult = {
             endReason: notify.payload.reason,
             score: notify.payload.score,
+            perks: notify.payload.perks,
           };
         }
       }

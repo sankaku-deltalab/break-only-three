@@ -6,7 +6,7 @@ import {LineEffect} from './components/line-effect';
 import {PaddleStatus} from './components/paddle-status';
 import {Pos} from './components/pos';
 import {BoLevelState} from './level';
-import {PerkTypes} from './perk';
+import {PerksState, PerkTypes} from './perk';
 
 type StrictAs<Base, T extends Base> = T;
 
@@ -50,7 +50,7 @@ export type TryStgSetting = StrictAs<
     };
     representation: {score: number; ended: boolean};
     notifications: {
-      end: {reason: GameEndReason; score: number};
+      end: {reason: GameEndReason; score: number; perks: PerksState};
     };
   }
 >;

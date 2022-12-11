@@ -133,6 +133,7 @@ const endGameIfCan = (
         GameStateHelper.addNotification(st, 'end', {
           reason: 'abort',
           score: st.scene.level.score,
+          perks: st.scene.level.perks,
         }),
       st => GameStateHelper.updateLevel(st, level => ({...level, ended: true})),
       st => Res.ok(st)

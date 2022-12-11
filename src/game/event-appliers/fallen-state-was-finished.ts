@@ -40,6 +40,7 @@ export class FallenStateWasFinishedEv implements EventManipulator<Stg, EvType> {
         GameStateHelper.addNotification(st, 'end', {
           reason: 'game-over',
           score: st.scene.level.score,
+          perks: st.scene.level.perks,
         }),
       st => BoLevelTrait.changeToFinishedState(st, {})
     )();
