@@ -205,13 +205,14 @@ const ChoicePerkUi: React.FC<{}> = () => {
       }}
     >
       <button
-        style={{padding: 10, width: '100%', height: '100%'}}
+        style={{padding: 10, width: '100%', height: '100%', color: 'red'}}
+        disabled={chosenCardIdx.err}
         onClick={handleSubmit}
       >
         Submit
       </button>
       <button
-        style={{padding: 10, width: '100%', height: '100%'}}
+        style={{padding: 10, width: '100%', height: '100%', color: 'red'}}
         onClick={handleSkip}
       >
         Skip
