@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import {useWindowSize} from '@react-hook/window-size';
 
 import {useAppSelector, useAppDispatch} from '../hooks';
@@ -21,6 +22,18 @@ const StageForNextjs = dynamic(
   () => import('../features/reactpixi/stage-for-nextjs'),
   {ssr: false}
 );
+
+const perkImages = {
+  bigPaddle: '/images/perk_icons/big_paddle.png',
+  flatPaddle: '/images/perk_icons/flat_paddle.png',
+  penetrativePaddle: '/images/perk_icons/penetrative_paddle.png',
+  hyperSensitivePaddle: '/images/perk_icons/hyper_sensitive_paddle.png',
+  bigBall: '/images/perk_icons/big_ball.png',
+  slowBall: '/images/perk_icons/slow_ball.png',
+  penetrativeWall: '/images/perk_icons/penetrative_wall.png',
+  sniperLauncher: '/images/perk_icons/sniper_launcher.png',
+  strongHitStop: '/images/perk_icons/strong_hit_stop.png',
+};
 
 export const Game = () => {
   const [winWidth, winHeight] = useWindowSize();
@@ -116,20 +129,40 @@ const ChoicePerkUi: React.FC<{}> = () => {
         width: '100%',
         height: '100%',
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
+        flexDirection: 'column',
+        justifyContent: 'center',
       }}
     >
-      {perks.map((perk, i) => (
-        <div key={perk} style={{flexBasis: '30%'}}>
-          <button
-            style={{width: '100%', height: '100%'}}
-            onClick={() => handleSelectCard(i)}
-          >
-            {PerkTrait.getPerkInfo(perk).name}
-          </button>
-        </div>
-      ))}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+        }}
+      >
+        {perks.map((perk, i) => {
+          const background =
+            chosenCardIdx.ok && chosenCardIdx.val === i ? 'red' : 'white';
+          return (
+            <div
+              key={perk}
+              style={{flexBasis: '30%', background, padding: 2}}
+              onClick={() => handleSelectCard(i)}
+            >
+              <img
+                src={perkImages[perk]}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  background: 'black',
+                  border: 10,
+                }}
+              />
+              <p style={{color: 'red'}}>{PerkTrait.getPerkInfo(perk).name}</p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 
