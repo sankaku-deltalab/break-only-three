@@ -46,7 +46,7 @@ export type TryStgSetting = StrictAs<
       annihilatedStateWasFinished: {};
       fallenStateWasFinished: {};
       anyBlockGetOutFromSurvivableArea: {blockIds: BodyId[]};
-      userChosePerk: {perk: PerkTypes};
+      userChosePerk: {perk?: PerkTypes};
     };
     representation: {score: number; ended: boolean};
     notifications: {

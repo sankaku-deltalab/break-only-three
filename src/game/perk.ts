@@ -21,6 +21,10 @@ export class PerkTrait {
     return Im.mapObj(perks, () => 0);
   }
 
+  static addPerk(perks: PerksState, perk: PerkTypes): PerksState {
+    return Im.replace(perks, perk, prev => (prev ?? 0) + 1);
+  }
+
   static convertPerksToSigils(perks: PerksState): SigilsState {
     return Enum.reduce(
       Object.keys(perks) as PerkTypes[],

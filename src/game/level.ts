@@ -9,7 +9,7 @@ import {
   Vec2dTrait,
 } from 'curtain-call3';
 import {gameArea, gameAreaRect, unit} from './constants';
-import {PerksState, PerkTrait} from './perk';
+import {PerksState, PerkTrait, PerkTypes} from './perk';
 import {TryStgSetting} from './setting';
 import {SigilsState} from './sigil';
 
@@ -39,7 +39,8 @@ export type StateType =
   | {type: 'released'}
   | {type: 'fallen'; endTime: number}
   | {type: 'annihilated'; endTime: number}
-  | {type: 'finished'};
+  | {type: 'finished'}
+  | {type: 'choosingPerk'; perks: PerkTypes[]};
 
 export type BoLevelState = {
   perks: PerksState;
@@ -53,10 +54,11 @@ export type BoLevelState = {
 export class BoLevelTrait {
   static createInitial(opt: {
     score: number;
+    perks: PerksState;
     wholeVelocity: Vec2d;
   }): BoLevelState {
     return {
-      perks: PerkTrait.getZeroPerks(),
+      perks: opt.perks,
       score: opt.score,
       ended: false,
       wholeVelocity: opt.wholeVelocity,
@@ -112,6 +114,40 @@ export class BoLevelTrait {
       st =>
         GameStateHelper.updateLevel(st, lv =>
           Im.replace(lv, 'ended', () => true)
+        )
+    )();
+  }
+
+  static changeToChoosingPerkState(
+    state: GameState<Stg>,
+    args: {}
+  ): GameState<Stg> {
+    const newLvState: StateType = {
+      type: 'choosingPerk',
+      perks: this.choiceSelectablePerks(state),
+    };
+    return Im.pipe(
+      () => state,
+      st =>
+        GameStateHelper.updateLevel(st, lv =>
+          Im.replace(lv, 'automaton', () => newLvState)
+        )
+    )();
+  }
+
+  private static choiceSelectablePerks(state: GameState<Stg>): PerkTypes[] {
+    return ['bigBall', 'bigPaddle', 'flatPaddle'];
+  }
+
+  static addPerk(
+    state: GameState<Stg>,
+    args: {perk: PerkTypes}
+  ): GameState<Stg> {
+    return Im.pipe(
+      () => state,
+      st =>
+        GameStateHelper.updateLevel(st, lv =>
+          Im.replace(lv, 'perks', perks => PerkTrait.addPerk(perks, args.perk))
         )
     )();
   }

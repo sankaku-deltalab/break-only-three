@@ -43,18 +43,9 @@ export class AnnihilatedStateWasFinishedEv
     state: GameState<Stg>,
     {}: EventPayload<Stg, EvType>
   ): GameState<Stg> {
-    return WholeGameProcessing.generateInitialGameState({
-      prevState: state,
-    });
-    // return Im.pipe(
-    //   () => state,
-    //   st =>
-    //     GameStateHelper.addNotification(st, 'end', {
-    //       reason: 'clear',
-    //       score: st.scene.level.score,
-    //     }),
-    //   st => BoLevelTrait.changeToFinishedState(st, {}),
-    //   st => GameStateHelper.updateLevel(st, level => ({...level, ended: true}))
-    // )();
+    return Im.pipe(
+      () => state,
+      st => BoLevelTrait.changeToChoosingPerkState(st, {})
+    )();
   }
 }

@@ -58,6 +58,7 @@ export class Director implements DirectorBehavior<Stg> {
   getTimeScales(state: GameState<Stg>): TimeScaling<Stg> {
     const stateType = GameStateHelper.getLevel(state).automaton.type;
     if (stateType === 'finished') return {base: 0.0};
+    if (stateType === 'choosingPerk') return {base: 0.0};
     if (stateType === 'fallen') return {base: 0.125};
     if (stateType === 'annihilated') return {base: 0.125};
 

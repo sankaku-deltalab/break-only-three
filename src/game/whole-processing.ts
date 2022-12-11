@@ -65,6 +65,7 @@ export class WholeGameProcessing {
       (): StateInitializer<Stg> => ({
         level: BoLevelTrait.createInitial({
           score: opt.score,
+          perks: opt.perks,
           wholeVelocity: opt.wholeVelocity,
         }),
         camera: {size: gameArea},
