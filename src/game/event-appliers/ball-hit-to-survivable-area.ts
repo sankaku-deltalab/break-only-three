@@ -37,12 +37,11 @@ export class BallHitToSurvivableArea implements EventManipulator<Stg, EvType> {
       balls,
       ([ballId, ball]): Result<EventPayload<Stg, EvType>> => {
         const movableArea = BoLevelTrait.getSurvivableArea(state, {});
-        const posForArea = AaRect2dTrait.calcPointPosition(ball.pos.pos, {
-          area: movableArea,
+        const ballArea = AaRect2dTrait.fromCenterAndSize(ball.pos.pos, {
+          x: ball.diam,
+          y: ball.diam,
         });
-        const normal = posForArea;
-        const oldVelocity = ball.movement.velocity;
-        const canReflect = Vec2dTrait.dot(oldVelocity, normal) > 0;
+        const canReflect = !AaRect2dTrait.isIn(ballArea, movableArea);
         if (canReflect) return Res.ok({ballId});
         return Res.err({});
       }
@@ -60,7 +59,11 @@ export class BallHitToSurvivableArea implements EventManipulator<Stg, EvType> {
     const penetrative = SigilTrait.getWallMakeBallPenetrative(
       BoLevelTrait.getSigils(state)
     );
-    const movableArea = BoLevelTrait.getSurvivableArea(state, {});
+    const survivableArea = BoLevelTrait.getSurvivableArea(state, {});
+    const movableArea = AaRect2dTrait.reduceArea(survivableArea, {
+      x: ball.val.diam,
+      y: ball.val.diam,
+    });
     const posForArea = AaRect2dTrait.calcPointPosition(ball.val.pos.pos, {
       area: movableArea,
     });
