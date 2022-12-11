@@ -22,6 +22,10 @@ import {
   Vec2d,
   Vec2dTrait,
   StateInitializer,
+  Res,
+  Result,
+  AnyEvent,
+  LevelState,
 } from 'curtain-call3';
 import {gameArea, unit} from '../../game/constants';
 import {GameEndReason, TryStgSetting} from '../../game/setting';
@@ -34,12 +38,13 @@ import {BoLevelTrait} from '../../game/level';
 import {DefaultPaddleTrait} from '../../game/actress-behaviors/default-paddle';
 import {MovingSurvivableAreaTrait} from '../../game/actress-behaviors/moving-survibable-area';
 import {WholeGameProcessing} from '../../game/whole-processing';
+import {PerkTypes} from '../../game/perk';
 
 type Stg = TryStgSetting;
 
 const vec2d = Vec2dTrait;
 
-type Result = {endReason: GameEndReason; score: number};
+type GameResult = {endReason: GameEndReason; score: number};
 
 export type GameSliceState = {
   canvas: {
@@ -50,7 +55,7 @@ export type GameSliceState = {
   };
   mode: 'menu' | 'game' | 'game-result';
   menu: {};
-  gameResult: Result;
+  gameResult: GameResult;
   game: {
     gameProgress: GameProgressState;
     game: GameState<Stg>;
@@ -59,6 +64,7 @@ export type GameSliceState = {
     canvasPos: Vec2d;
     down: boolean;
   };
+  toGameEvents: AnyEvent<Stg>[];
 };
 
 const generateInitialGameState = (): GameState<Stg> => {
@@ -83,6 +89,7 @@ const initialState: GameSliceState = {
     canvasPos: vec2d.zero(),
     down: false,
   },
+  toGameEvents: [],
 };
 
 export const gameSlice = createSlice({
@@ -163,6 +170,8 @@ export const gameSlice = createSlice({
         return;
       }
       const state = original(editableState) as GameSliceState;
+      const events = state.toGameEvents;
+      editableState.toGameEvents = [];
       const renderingState = calcRenderingState(state);
       let st = state.game.game;
       const {state: newGameState, notifications} =
@@ -171,6 +180,7 @@ export const gameSlice = createSlice({
           input: {
             pointer: state.pointer,
           },
+          events,
           time: {
             deltaMs: action.payload.deltaMs,
           },
@@ -197,6 +207,9 @@ export const gameSlice = createSlice({
     resetAllStageState: (state, action: PayloadAction<GameState<Stg>>) => {
       state.game.game = action.payload;
     },
+    addEvents: (state, action: PayloadAction<{events: AnyEvent<Stg>[]}>) => {
+      state.toGameEvents = [...state.toGameEvents, ...action.payload.events];
+    },
   },
 });
 
@@ -211,6 +224,7 @@ export const {
   startGameFromMenu,
   returnToMenuFromResult,
   restartGame,
+  addEvents,
 } = gameSlice.actions;
 
 const calcRenderingState = (state: GameSliceState): RenderingState => {
@@ -229,6 +243,13 @@ const calcRenderingState = (state: GameSliceState): RenderingState => {
 };
 
 const selectGameState = (state: AppState) => state.game;
+
+export const selectGame = createSelector<
+  [typeof selectGameState],
+  GameState<Stg>
+>([selectGameState], state => {
+  return state.game.game;
+});
 
 export const selectGraphics = createSelector<
   [typeof selectGameState],
@@ -272,11 +293,27 @@ export const selectMode = createSelector<
   return state.mode;
 });
 
-export const selectResult = createSelector<[typeof selectGameState], Result>(
-  [selectGameState],
-  state => {
-    return state.gameResult;
-  }
-);
+export const selectLevelState = createSelector<
+  [typeof selectGame],
+  LevelState<Stg>
+>([selectGame], state => {
+  return GameStateHelper.getLevel(state);
+});
+
+export const selectPerkChoosingState = createSelector<
+  [typeof selectLevelState],
+  Result<{perks: PerkTypes[]}>
+>([selectLevelState], lv => {
+  if (lv.automaton.type !== 'choosingPerk') return Res.err({});
+
+  return Res.ok({perks: lv.automaton.perks});
+});
+
+export const selectResult = createSelector<
+  [typeof selectGameState],
+  GameResult
+>([selectGameState], state => {
+  return state.gameResult;
+});
 
 export default gameSlice.reducer;

@@ -4,7 +4,9 @@ import {
   EventManipulator,
   Overlaps,
 } from 'curtain-call3';
+import {BoLevelTrait} from '../level';
 import {TryStgSetting} from '../setting';
+import {WholeGameProcessing} from '../whole-processing';
 
 type Stg = TryStgSetting;
 
@@ -25,6 +27,10 @@ export class UserChosePerkEv implements EventManipulator<Stg, EvType> {
     state: GameState<Stg>,
     {perk}: EventPayload<Stg, EvType>
   ): GameState<Stg> {
-    return state;
+    const prevState =
+      perk === undefined ? state : BoLevelTrait.addPerk(state, {perk});
+    return WholeGameProcessing.generateInitialGameState({
+      prevState,
+    });
   }
 }

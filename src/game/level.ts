@@ -5,6 +5,7 @@ import {
   GameState,
   GameStateHelper,
   Im,
+  RecSetTrait,
   Vec2d,
   Vec2dTrait,
 } from 'curtain-call3';
@@ -136,7 +137,22 @@ export class BoLevelTrait {
   }
 
   private static choiceSelectablePerks(state: GameState<Stg>): PerkTypes[] {
-    return ['bigBall', 'bigPaddle', 'flatPaddle'];
+    const perks = GameStateHelper.getLevel(state).perks;
+    const mutChoosables = [
+      ...RecSetTrait.iter(PerkTrait.getPerksNotHave(perks)),
+    ] as PerkTypes[];
+
+    // shuffle
+    // https://qiita.com/komaji504/items/62a0f8ea43053e90555a
+    for (let i = mutChoosables.length - 1; i > 0; i--) {
+      const r = Math.floor(Math.random() * (i + 1));
+      const tmp = mutChoosables[i];
+      mutChoosables[i] = mutChoosables[r];
+      mutChoosables[r] = tmp;
+    }
+    return [mutChoosables[0], mutChoosables[1], mutChoosables[2]].filter(
+      v => v !== undefined
+    );
   }
 
   static addPerk(
