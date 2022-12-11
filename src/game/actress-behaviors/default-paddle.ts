@@ -43,13 +43,17 @@ export class DefaultPaddleTrait {
   }): ActressInitializer<Stg, 'paddle', 'defaultPaddle'> {
     console.log(args.sigils);
     const paddleWidthBase = unit;
-    const paddleWidth =
-      paddleWidthBase * (SigilTrait.getPaddleSizeLevel(args.sigils) / 10);
+    const paddleWidthLevel = SigilTrait.getPaddleSizeLevel(args.sigils);
+    const paddleWidth = paddleWidthBase * (paddleWidthLevel / 10);
 
-    const reflectOffsetLengthBase = unit / 2;
+    const reflectOffsetLengthBase = unit;
+    const reflectOffsetLengthLevelRaw = SigilTrait.getPaddleFlatLevel(
+      args.sigils
+    );
+    const reflectOffsetLengthLevel =
+      (reflectOffsetLengthLevelRaw + paddleWidthLevel) / 2;
     const reflectOffsetLength =
-      reflectOffsetLengthBase *
-      (SigilTrait.getPaddleFlatLevel(args.sigils) / 10);
+      reflectOffsetLengthBase * (reflectOffsetLengthLevel / 10);
 
     return {
       bodyType: 'paddle',
