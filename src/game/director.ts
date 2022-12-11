@@ -39,8 +39,8 @@ export class Director implements DirectorBehavior<Stg> {
     const st = pipe(
       () => state,
       st => Res.ok(st),
-      st => processWholeMovement(st, other),
-      st => endGameIfCan(st, other)
+      st => processWholeMovement(st, other)
+      // st => endGameIfCan(st, other)
     )();
     if (st.err) throw Error(String(st.val));
     return st.val;
