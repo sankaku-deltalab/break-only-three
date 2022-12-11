@@ -64,6 +64,7 @@ export class BallHitToBlockEv implements EventManipulator<Stg, EvType> {
       () => ball.val,
       ball =>
         Im.replace(ball, 'movement', mov => {
+          if (ball.penetrative) return mov;
           const pos = ball.pos.pos;
           const prevPos = ball.pos.prevPos;
           const wallShape = AaRect2dTrait.fromCenterAndSize(
