@@ -47,7 +47,7 @@ export class LaunchBallEv implements EventManipulator<Stg, EvType> {
     const speedLevel = SigilTrait.getBallSpeedLevel(
       BoLevelTrait.getSigils(state)
     );
-    const speedBase = (7 * unit) / 1000;
+    const speedBase = (10 * unit) / 1000;
     const speed = Math.max(0.1, speedLevel / 10) * speedBase;
     const velocity = Vec2dTrait.fromRadians(directionRad, speed);
 

@@ -89,7 +89,7 @@ export class WholeGameProcessing {
       ? GameStateHelper.getLevel(args.prevState).perks
       : PerkTrait.getZeroPerks();
     const velocityDir = randIn(Math.PI * 0.25, Math.PI * 0.25 * 3);
-    const speed = lerp(score / 10, unit / 2000, unit / 500);
+    const speed = lerp(score / 5, unit / 1000, unit / 500);
     const velocity = Vec2dTrait.fromRadians(velocityDir, speed);
     return WholeGameProcessing.initGameState({
       perks,

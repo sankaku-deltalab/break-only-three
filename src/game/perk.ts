@@ -77,13 +77,13 @@ export class PerkTrait {
 }
 
 const perkToSigil: Record<PerkTypes, Partial<SigilsState>> = {
-  bigPaddle: {paddleExpansion: 1},
-  flatPaddle: {paddleFlatten: 1},
+  bigPaddle: {paddleExpansion: 10},
+  flatPaddle: {paddleFlatten: 10},
   penetrativePaddle: {paddleMakeBallPenetrative: 1},
-  hyperSensitivePaddle: {paddleSensitivity: 1},
-  bigBall: {biggerBall: 1},
-  slowBall: {slowerBall: 1},
+  hyperSensitivePaddle: {paddleSensitivity: 5},
+  bigBall: {biggerBall: 5},
+  slowBall: {slowerBall: 7},
   penetrativeWall: {wallMakeBallPenetrative: 1},
-  sniperLauncher: {speedDownLauncherGuide: 1, longerLauncherGuide: 1},
-  strongHitStop: {strongerHitStop: 1},
+  sniperLauncher: {speedDownLauncherGuide: 5, longerLauncherGuide: 10},
+  strongHitStop: {strongerHitStop: 10},
 };
