@@ -81,7 +81,42 @@ export class DefaultBallBeh implements ActressBehavior<Stg, BT, MT> {
       closed: true,
       zIndex,
     });
-    return [line];
+    return [line, ...this.generatePenetrativeEffect(st, args)];
+  }
+
+  private generatePenetrativeEffect(
+    st: ActressState<Stg, BT, MT>,
+    args: {
+      gameState: VisibleGameState<Stg>;
+    }
+  ): Graphic<Stg>[] {
+    if (!st.body.penetrative) return [];
+    const zIndex = WholeGameProcessing.getZIndex().ball;
+    const color = WholeGameProcessing.getColors().ball;
+    const left = {x: -unit / 2, y: 0};
+    const right = {x: unit / 2, y: 0};
+    const top = {x: 0, y: -unit / 2};
+    const bottom = {x: 0, y: unit / 2};
+
+    const lineH = LineGraphicTrait.create({
+      key: 'penetrative-effect.horizontal',
+      pos: st.body.pos.pos,
+      color,
+      paths: [left, right],
+      thickness: 1,
+      closed: true,
+      zIndex,
+    });
+    const lineV = LineGraphicTrait.create({
+      key: 'penetrative-effect.vertical',
+      pos: st.body.pos.pos,
+      color,
+      paths: [top, bottom],
+      thickness: 1,
+      closed: true,
+      zIndex,
+    });
+    return [lineH, lineV];
   }
 
   generateCollision(
