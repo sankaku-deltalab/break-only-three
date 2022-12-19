@@ -16,7 +16,9 @@ export class SpriteHandler implements Handler<Cfg, HT> {
     decObj: DeclarativeObject<Cfg, HT>,
     context: Context<Cfg>
   ): PixiObject<Cfg, HT> {
-    return new PIXI.Sprite();
+    const sp = new PIXI.Sprite();
+    sp.mask = context.mask;
+    return sp;
   }
 
   isDecObjUpdated(
@@ -24,7 +26,7 @@ export class SpriteHandler implements Handler<Cfg, HT> {
     oldDecObj: DeclarativeObject<Cfg, HT>,
     context: Context<Cfg>
   ): boolean {
-    return newDecObj.payload === oldDecObj.payload;
+    return newDecObj.payload !== oldDecObj.payload;
   }
 
   update(

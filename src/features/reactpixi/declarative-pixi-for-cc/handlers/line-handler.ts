@@ -16,7 +16,9 @@ export class LineHandler implements Handler<Cfg, HT> {
     decObj: DeclarativeObject<Cfg, HT>,
     context: Context<Cfg>
   ): PixiObject<Cfg, HT> {
-    return new PIXI.Graphics();
+    const g = new PIXI.Graphics();
+    g.mask = context.mask;
+    return g;
   }
 
   isDecObjUpdated(

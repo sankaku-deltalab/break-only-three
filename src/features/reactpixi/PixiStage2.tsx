@@ -36,6 +36,8 @@ const PixiStage2: React.FC<PixiStage2Props> = ({
   tick,
 }) => {
   const [decPixi, setDecPixi] = useState<DeclarativePixiForCc | null>(null);
+  const [gameAreaMaskGraphics] = useState<PIXI.Graphics>(new PIXI.Graphics());
+  const [gameAreaGraphics] = useState<PIXI.Graphics>(new PIXI.Graphics());
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // init app
@@ -47,16 +49,17 @@ const PixiStage2: React.FC<PixiStage2Props> = ({
     const app = new PIXI.Application({
       view: canvas,
       antialias: true,
-      backgroundColor: 0x000000,
+      backgroundColor: outsideColor,
     });
     app.stage.sortableChildren = true;
-    const decP = createDecPixiForCc(app);
+    app.stage.addChild(gameAreaMaskGraphics, gameAreaGraphics);
     app.ticker.add(frames => {
       const fpms = PIXI.settings.TARGET_FPMS ?? 1 / 60;
       const deltaMs = frames / fpms;
       tick({deltaMs});
     });
 
+    const decP = createDecPixiForCc(app);
     setDecPixi(decP);
   }, [canvasRef]);
 
@@ -66,11 +69,30 @@ const PixiStage2: React.FC<PixiStage2Props> = ({
     decPixi.app.renderer.resize(canvasSize.x, canvasSize.y);
   }, [canvasSize]);
 
+  // update base graphics
+  useEffect(() => {
+    const argsBase = {
+      canvasSize,
+      renderingNw: renderingArea.nw,
+      renderingSize: AaRect2dTrait.size(renderingArea),
+    };
+    updateGameAreaGraphics({
+      graphics: gameAreaGraphics,
+      mask: gameAreaMaskGraphics,
+      color: backgroundColor,
+      ...argsBase,
+    });
+    updateGameAreaMaskGraphics({
+      graphics: gameAreaMaskGraphics,
+      ...argsBase,
+    });
+  }, [renderingArea]);
+
   // update graphics
   useEffect(() => {
     if (decPixi === null) return;
     const decObjects = createDecObjects(graphics);
-    decPixi.update(decObjects, {});
+    decPixi.update(decObjects, {mask: gameAreaMaskGraphics});
   }, [graphics, decPixi]);
 
   return (
@@ -103,6 +125,42 @@ const createDecObjects = (
     }
     throw new Error('unknown graphic');
   });
+};
+
+const updateGameAreaMaskGraphics = (args: {
+  graphics: PIXI.Graphics;
+  renderingNw: Vec2d;
+  renderingSize: Vec2d;
+}) => {
+  const g = args.graphics;
+  const renNw = args.renderingNw;
+  const renSize = args.renderingSize;
+
+  g.clear();
+  g.beginFill(0xffffff);
+  g.drawRect(renNw.x, renNw.y, renSize.x, renSize.y);
+  g.drawRect(0, 0, renSize.x * 10, renSize.y * 10);
+  g.endFill();
+  g.zIndex = -20;
+};
+
+const updateGameAreaGraphics = (args: {
+  graphics: PIXI.Graphics;
+  mask: PIXI.Container | null;
+  color: number;
+  renderingNw: Vec2d;
+  renderingSize: Vec2d;
+}) => {
+  const g = args.graphics;
+  const renNw = args.renderingNw;
+  const renSize = args.renderingSize;
+
+  g.clear();
+  g.beginFill(args.color);
+  g.drawRect(renNw.x, renNw.y, renSize.x, renSize.y);
+  g.endFill();
+  g.mask = args.mask;
+  g.zIndex = -10;
 };
 
 export default PixiStage2;
