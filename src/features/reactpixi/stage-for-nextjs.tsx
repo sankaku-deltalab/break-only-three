@@ -19,6 +19,7 @@ import {
 import {AaRect2dTrait, Res, Result, Vec2d, Vec2dTrait} from 'curtain-call3';
 import {WholeGameProcessing} from '../../game/whole-processing';
 import PixiStage from './pixi-stage';
+import PixiStage2 from './PixiStage2';
 
 const vec2d = Vec2dTrait;
 
@@ -108,7 +109,7 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
       onPointerUp={handlePointerUp}
       onPointerMove={handlePointerMove}
     >
-      <PixiStage
+      <PixiStage2
         backgroundColor={backgroundColor}
         canvasSize={canvasSize}
         graphics={graphics}
