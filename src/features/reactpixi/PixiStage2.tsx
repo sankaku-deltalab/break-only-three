@@ -53,9 +53,8 @@ const PixiStage2: React.FC<PixiStage2Props> = ({
     });
     app.stage.sortableChildren = true;
     app.stage.addChild(gameAreaMaskGraphics, gameAreaGraphics);
-    app.ticker.add(frames => {
-      const fpms = PIXI.settings.TARGET_FPMS ?? 1 / 60;
-      const deltaMs = frames / fpms;
+    app.ticker.add(() => {
+      const deltaMs = app.ticker.deltaMS;
       tick({deltaMs});
     });
 
