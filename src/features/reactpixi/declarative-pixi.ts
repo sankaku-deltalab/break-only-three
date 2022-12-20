@@ -33,14 +33,15 @@ export type AnyDeclarativeObj<Cfg extends Config> = DeclarativeObject<
 >;
 
 export interface Handler<Cfg extends Config, HT extends HandlerType<Cfg>> {
-  create(
+  createPixiObject(
     decObj: DeclarativeObject<Cfg, HT>,
     context: Context<Cfg>
   ): PixiObject<Cfg, HT>;
 
-  isDecObjUpdated(
+  shouldUpdate(
     newDecObj: DeclarativeObject<Cfg, HT>,
     oldDecObj: DeclarativeObject<Cfg, HT>,
+    pixiObj: PixiObject<Cfg, HT>,
     context: Context<Cfg>
   ): boolean;
 
@@ -109,9 +110,10 @@ export class DeclarativePixi<Cfg extends Config> {
         state.get(decObj.id) ??
         this.createNewObj(decObj, context, handler, state);
 
-      const shouldUpdate = handler.isDecObjUpdated(
+      const shouldUpdate = handler.shouldUpdate(
         decObj,
         prevObj.decObj,
+        prevObj.pixiObj,
         context
       );
       if (shouldUpdate) {
@@ -137,7 +139,7 @@ export class DeclarativePixi<Cfg extends Config> {
     decObj: DeclarativeObject<Cfg, HT>;
     pixiObj: PixiObject<Cfg, HT>;
   } {
-    const pixiObj = handler.create(decObj, context);
+    const pixiObj = handler.createPixiObject(decObj, context);
     this.getPixiContainer().addChild(pixiObj);
     state.set(decObj.id, {decObj, pixiObj});
     return {decObj, pixiObj};

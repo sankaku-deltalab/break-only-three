@@ -12,7 +12,7 @@ const ht = 'line';
 type HT = typeof ht;
 
 export class LineHandler implements Handler<Cfg, HT> {
-  create(
+  createPixiObject(
     decObj: DeclarativeObject<Cfg, HT>,
     context: Context<Cfg>
   ): PixiObject<Cfg, HT> {
@@ -21,9 +21,10 @@ export class LineHandler implements Handler<Cfg, HT> {
     return g;
   }
 
-  isDecObjUpdated(
+  shouldUpdate(
     newDecObj: DeclarativeObject<Cfg, HT>,
     oldDecObj: DeclarativeObject<Cfg, HT>,
+    pixiObj: PixiObject<Cfg, HT>,
     context: Context<Cfg>
   ): boolean {
     return newDecObj.payload !== oldDecObj.payload;
