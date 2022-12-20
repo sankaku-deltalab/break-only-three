@@ -17,5 +17,5 @@ export type DeclarativePixiForCc = DeclarativePixi<Cfg>;
 export type AnyDeclarativeObjForCc = AnyDeclarativeObj<Cfg>;
 
 export const createDecPixiForCc = (app: PIXI.Application) => {
-  return new DeclarativePixi(app, handlers);
+  return new DeclarativePixi(app.stage, handlers);
 };

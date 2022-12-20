@@ -35,7 +35,9 @@ const PixiStage2: React.FC<PixiStage2Props> = ({
   backgroundColor,
   tick,
 }) => {
-  const [decPixi, setDecPixi] = useState<DeclarativePixiForCc | null>(null);
+  const [decPixi, setDecPixi] = useState<
+    [PIXI.Application, DeclarativePixiForCc] | null
+  >(null);
   const [gameAreaMaskGraphics] = useState<PIXI.Graphics>(new PIXI.Graphics());
   const [gameAreaGraphics] = useState<PIXI.Graphics>(new PIXI.Graphics());
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -59,13 +61,14 @@ const PixiStage2: React.FC<PixiStage2Props> = ({
     });
 
     const decP = createDecPixiForCc(app);
-    setDecPixi(decP);
+    setDecPixi([app, decP]);
   }, [canvasRef]);
 
   // update canvas size
   useEffect(() => {
     if (decPixi === null) return;
-    decPixi.app.renderer.resize(canvasSize.x, canvasSize.y);
+    const [app, _] = decPixi;
+    app.renderer.resize(canvasSize.x, canvasSize.y);
   }, [canvasSize]);
 
   // update base graphics
@@ -90,8 +93,9 @@ const PixiStage2: React.FC<PixiStage2Props> = ({
   // update graphics
   useEffect(() => {
     if (decPixi === null) return;
+    const [_, dec] = decPixi;
     const decObjects = createDecObjects(graphics);
-    decPixi.update(decObjects, {mask: gameAreaMaskGraphics});
+    dec.update(decObjects, {mask: gameAreaMaskGraphics});
   }, [graphics, decPixi]);
 
   return (

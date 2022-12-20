@@ -1,8 +1,6 @@
-import * as PIXI from 'pixi.js';
-
 export type Config = {
   context: Record<string, unknown>;
-  handlers: Record<string, {payload: unknown; pixiObj: PIXI.DisplayObject}>;
+  handlers: Record<string, {payload: unknown; pixiObj: unknown}>;
 };
 
 export type Context<Cfg extends Config> = Cfg['context'];
@@ -16,6 +14,10 @@ export type PixiObject<
   Cfg extends Config,
   Type extends HandlerType<Cfg>
 > = Cfg['handlers'][Type]['pixiObj'];
+export type AnyPixiObject<Cfg extends Config> = PixiObject<
+  Cfg,
+  HandlerType<Cfg>
+>;
 
 export type DeclarativeObjectId = string;
 export type DeclarativeObject<
@@ -31,6 +33,11 @@ export type AnyDeclarativeObj<Cfg extends Config> = DeclarativeObject<
   Cfg,
   HandlerType<Cfg>
 >;
+
+export type PixiContainerLike<Cfg extends Config> = {
+  addChild(child: AnyPixiObject<Cfg>): unknown;
+  removeChild(child: AnyPixiObject<Cfg>): unknown;
+};
 
 export interface Handler<Cfg extends Config, HT extends HandlerType<Cfg>> {
   createPixiObject(
@@ -78,7 +85,7 @@ export class DeclarativePixi<Cfg extends Config> {
   private readonly state: ObjectsState<Cfg>;
 
   constructor(
-    readonly app: PIXI.Application,
+    readonly container: PixiContainerLike<Cfg>,
     private readonly handlers: Handlers<Cfg>
   ) {
     this.handlerTypes = Object.keys(this.handlers) as HandlerType<Cfg>[];
@@ -145,7 +152,7 @@ export class DeclarativePixi<Cfg extends Config> {
     return {decObj, pixiObj};
   }
 
-  private getPixiContainer(): PIXI.Container {
-    return this.app.stage;
+  private getPixiContainer(): PixiContainerLike<Cfg> {
+    return this.container;
   }
 }
