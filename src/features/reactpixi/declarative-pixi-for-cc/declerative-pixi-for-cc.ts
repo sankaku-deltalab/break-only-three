@@ -5,10 +5,12 @@ import {
   Handlers,
 } from '../declarative-pixi';
 import {Cfg} from './config-for-cc';
+import {BuiltinRectHandler} from './handlers/builtin-rect-handler';
 import {LineHandler} from './handlers/line-handler';
 import {SpriteHandler} from './handlers/sprite-handler';
 
 const handlers: Handlers<Cfg> = {
+  builtinRect: new BuiltinRectHandler(),
   line: new LineHandler(),
   sprite: new SpriteHandler(),
 };

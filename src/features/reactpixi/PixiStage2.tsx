@@ -78,12 +78,6 @@ const PixiStage2: React.FC<PixiStage2Props> = ({
       renderingNw: renderingArea.nw,
       renderingSize: AaRect2dTrait.size(renderingArea),
     };
-    updateGameAreaGraphics({
-      graphics: gameAreaGraphics,
-      mask: gameAreaMaskGraphics,
-      color: backgroundColor,
-      ...argsBase,
-    });
     updateGameAreaMaskGraphics({
       graphics: gameAreaMaskGraphics,
       ...argsBase,
@@ -94,9 +88,15 @@ const PixiStage2: React.FC<PixiStage2Props> = ({
   useEffect(() => {
     if (decPixi === null) return;
     const [_, dec] = decPixi;
-    const decObjects = createDecObjects(graphics);
+    const decObjects = [
+      ...createDecObjectsFromCcGraphics(graphics),
+      ...createBuiltinDecObjects({
+        renderingArea,
+        gameAreaColor: backgroundColor,
+      }),
+    ];
     dec.update(decObjects, {mask: gameAreaMaskGraphics});
-  }, [graphics, decPixi]);
+  }, [graphics, decPixi, renderingArea, backgroundColor]);
 
   return (
     <canvas
@@ -108,7 +108,24 @@ const PixiStage2: React.FC<PixiStage2Props> = ({
   );
 };
 
-const createDecObjects = (
+const createBuiltinDecObjects = (args: {
+  renderingArea: AaRect2d;
+  gameAreaColor: number;
+}): AnyDeclarativeObjForCc[] => {
+  return [
+    {
+      id: 'builtinRect:gameArea',
+      type: 'builtinRect',
+      payload: {
+        rect: args.renderingArea,
+        color: args.gameAreaColor,
+        zIndex: -10,
+      },
+    },
+  ];
+};
+
+const createDecObjectsFromCcGraphics = (
   graphics: CanvasGraphic<Stg>[]
 ): AnyDeclarativeObjForCc[] => {
   return graphics.map(g => {
@@ -142,28 +159,8 @@ const updateGameAreaMaskGraphics = (args: {
   g.clear();
   g.beginFill(0xffffff);
   g.drawRect(renNw.x, renNw.y, renSize.x, renSize.y);
-  g.drawRect(0, 0, renSize.x * 10, renSize.y * 10);
   g.endFill();
   g.zIndex = -20;
-};
-
-const updateGameAreaGraphics = (args: {
-  graphics: PIXI.Graphics;
-  mask: PIXI.Container | null;
-  color: number;
-  renderingNw: Vec2d;
-  renderingSize: Vec2d;
-}) => {
-  const g = args.graphics;
-  const renNw = args.renderingNw;
-  const renSize = args.renderingSize;
-
-  g.clear();
-  g.beginFill(args.color);
-  g.drawRect(renNw.x, renNw.y, renSize.x, renSize.y);
-  g.endFill();
-  g.mask = args.mask;
-  g.zIndex = -10;
 };
 
 export default PixiStage2;
