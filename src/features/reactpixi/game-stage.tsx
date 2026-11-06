@@ -1,5 +1,5 @@
 import React, {PointerEvent, useCallback, useEffect, useRef} from 'react';
-import {Stage, Sprite, useTick, Container, Graphics} from '@inlet/react-pixi';
+import {Stage, Sprite, useTick, Container, Graphics} from '@pixi/react';
 import * as PIXI from 'pixi.js';
 import {useAppSelector, useAppDispatch} from '../../hooks';
 import {
@@ -28,11 +28,11 @@ import {WholeGameProcessing} from '../../game/whole-processing';
 
 const vec2d = Vec2dTrait;
 
-export type StageForNextjsProps = {
+export type GameStageProps = {
   canvasSize: {x: number; y: number};
 };
 
-const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
+const GameStage: React.FC<GameStageProps> = ({canvasSize}) => {
   const dispatch = useAppDispatch();
   const graphics = useAppSelector(selectGraphics);
   const storedCanvasSize = useAppSelector(selectCanvasSize);
@@ -149,14 +149,14 @@ const StageForNextjs: React.FC<StageForNextjsProps> = ({canvasSize}) => {
           }}
         />
         {/* <CameraGraphicElement area={renderingArea} /> */}
-        <ActuallyJustContainer mask={maskRef.current} position={[0, 0]}>
+        <Container mask={maskRef.current} position={[0, 0]}>
           {lineGraphics.map(line => (
             <LineGraphicElement key={line.key} line={line} />
           ))}
           {spriteGraphics.map(g => (
             <SpriteGraphicElement key={g.key} sprite={g} />
           ))}
-        </ActuallyJustContainer>
+        </Container>
       </Stage>
     </div>
   );
@@ -188,8 +188,6 @@ const LineGraphicElement = (props: {line: CanvasLineGraphic}) => {
   );
 };
 
-// react v18 and react-pixi v6.8.0 cause type error. And avoid it with this line.
-const ActuallyJustContainer: React.FC<Record<string, unknown>> = Container;
 
 const SpriteGraphicElement = (props: {sprite: CanvasSpriteGraphic}) => {
   const g = props.sprite;
@@ -223,4 +221,4 @@ const CameraGraphicElement = (props: {area: AaRect2d}) => {
   return <Graphics draw={draw} />;
 };
 
-export default StageForNextjs;
+export default GameStage;

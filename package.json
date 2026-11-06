@@ -1,27 +1,27 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
+    "dev": "vite",
+    "build": "npm run type-check && vite build",
+    "start": "vite preview",
     "type-check": "tsc",
     "test": "jest",
-    "format": "prettier -w src"
+    "format": "prettier -w src",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@inlet/react-pixi": "^6.8.0",
     "@react-hook/window-size": "^3.1.1",
     "@reduxjs/toolkit": "^1.3.6",
     "bezier-easing": "^2.1.0",
+    "buffer": "^6.0.3",
     "curtain-call3": "^1.0.0-alpha.1",
     "immer": "^9.0.16",
-    "next": "latest",
-    "next-pwa": "^5.6.0",
     "pixi.js": "^6.5.8",
     "rambda": "^7.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.1.0",
-    "react-redux": "^7.2.0"
+    "react-redux": "^7.2.0",
+    "@pixi/react": "^7.1.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.0.0",
@@ -32,11 +32,17 @@
     "@types/react": "^18.0.10",
     "@types/react-dom": "^18.0.5",
     "@types/react-redux": "^7.1.18",
+    "@vitejs/plugin-react": "^5.1.0",
     "jest": "^27.2.0",
     "jest-css-modules-transform": "^4.2.0",
     "prettier": "^2.7.1",
     "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1",
-    "typescript": "^4.3.4"
+    "typescript": "^4.3.4",
+    "vite": "^7.3.0",
+    "vite-plugin-pwa": "^1.2.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }

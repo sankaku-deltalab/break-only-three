@@ -1,5 +1,4 @@
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
+import GameStage from '../features/reactpixi/game-stage';
 import {useWindowSize} from '@react-hook/window-size';
 
 import {useAppSelector, useAppDispatch} from '../hooks';
@@ -17,11 +16,6 @@ import {TryStgSetting} from '../game/setting';
 import {PerkTrait} from '../game/perk';
 
 type Stg = TryStgSetting;
-
-const StageForNextjs = dynamic(
-  () => import('../features/reactpixi/stage-for-nextjs'),
-  {ssr: false}
-);
 
 const perkImages = {
   bigPaddle: '/images/perk_icons/big_paddle.png',
@@ -49,7 +43,7 @@ export const Game = () => {
 
   return (
     <div style={{visibility, position: 'absolute'}}>
-      <StageForNextjs canvasSize={{x: width, y: height}} />
+      <GameStage canvasSize={{x: width, y: height}} />
       <OverlayUi score={representation.score} />
       <ChoicePerkUi />
     </div>

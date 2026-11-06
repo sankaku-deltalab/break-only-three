@@ -1,8 +1,5 @@
-import type {NextPage} from 'next';
-import Head from 'next/head';
-
-import styles from '../styles/Home.module.css';
-import {useAppSelector, useAppDispatch} from '../hooks';
+import styles from './styles/Home.module.css';
+import {useAppSelector, useAppDispatch} from './hooks';
 
 import {
   startGameFromMenu,
@@ -10,21 +7,15 @@ import {
   selectResult,
   restartGame,
   selectLevelState,
-} from '../features/reactpixi/gameSlice';
-import {Game} from '../page-components/game';
-import {PerksState, PerkTrait, PerkTypes} from '../game/perk';
+} from './features/reactpixi/gameSlice';
+import {Game} from './page-components/game';
+import {PerksState, PerkTrait, PerkTypes} from './game/perk';
 import {RecSetTrait} from 'curtain-call3';
-import {WholeGameProcessing} from '../game/whole-processing';
+import {WholeGameProcessing} from './game/whole-processing';
 
-const IndexPage: NextPage = () => {
-  const mode = useAppSelector(selectMode);
-
+const App = () => {
   return (
     <div className={styles.container}>
-      <Head>
-        <title>Break Only Three</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <Menu />
       <Game />
       <GameResult />
@@ -163,4 +154,4 @@ const constructUrl = (host: string, base: Record<string, string>): string => {
   return encodeURI(`${host}?${paramsStr}`);
 };
 
-export default IndexPage;
+export default App;
