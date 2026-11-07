@@ -17,16 +17,18 @@ import {PerkTrait} from '../game/perk';
 
 type Stg = TryStgSetting;
 
+const baseUrl = import.meta.env.BASE_URL;
+
 const perkImages = {
-  bigPaddle: '/images/perk_icons/big_paddle.png',
-  flatPaddle: '/images/perk_icons/flat_paddle.png',
-  penetrativePaddle: '/images/perk_icons/penetrative_paddle.png',
-  hyperSensitivePaddle: '/images/perk_icons/hyper_sensitive_paddle.png',
-  bigBall: '/images/perk_icons/big_ball.png',
-  slowBall: '/images/perk_icons/slow_ball.png',
-  penetrativeWall: '/images/perk_icons/penetrative_wall.png',
-  sniperLauncher: '/images/perk_icons/sniper_launcher.png',
-  strongHitStop: '/images/perk_icons/strong_hit_stop.png',
+  bigPaddle: baseUrl + 'images/perk_icons/big_paddle.png',
+  flatPaddle: baseUrl + 'images/perk_icons/flat_paddle.png',
+  penetrativePaddle: baseUrl + 'images/perk_icons/penetrative_paddle.png',
+  hyperSensitivePaddle: baseUrl + 'images/perk_icons/hyper_sensitive_paddle.png',
+  bigBall: baseUrl + 'images/perk_icons/big_ball.png',
+  slowBall: baseUrl + 'images/perk_icons/slow_ball.png',
+  penetrativeWall: baseUrl + 'images/perk_icons/penetrative_wall.png',
+  sniperLauncher: baseUrl + 'images/perk_icons/sniper_launcher.png',
+  strongHitStop: baseUrl + 'images/perk_icons/strong_hit_stop.png',
 };
 
 export const Game = () => {

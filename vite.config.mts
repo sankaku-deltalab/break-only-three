@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import {VitePWA} from 'vite-plugin-pwa';
 
 export default defineConfig({
+  base: process.env.VITE_BASE_PATH || '/',
   // Pixi's typedarray-pool dependency expects the browser Buffer implementation.
   resolve: {alias: {buffer: 'buffer/'}},
   plugins: [
