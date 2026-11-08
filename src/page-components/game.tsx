@@ -150,6 +150,7 @@ const ChoicePerkUi: React.FC<{}> = () => {
                 style={{
                   width: '100%',
                   height: 'auto',
+                  imageRendering: 'pixelated',
                   background: 'black',
                   border: 10,
                 }}
